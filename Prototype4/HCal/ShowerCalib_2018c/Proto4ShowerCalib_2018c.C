@@ -161,34 +161,35 @@ int Proto4ShowerCalib::Init(PHCompositeNode *topNode)
 
   hm->registerHisto(new TH1F("hBeam_Mom", "hBeam_Mom", 1200, -120, 120));
 
-  // EMCAL
+  // EMCAL QA
   TH1F *h_emcalin_lg_tower_calib[64];
   for(int i_tower = 0; i_tower < 64; ++i_tower)
   {
     string HistName = Form("h_emcal_lg_tower_%d_calib",i_tower);
-    h_emcalin_lg_tower_calib[i_tower] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,14.5); // GeV
+    h_emcalin_lg_tower_calib[i_tower] = new TH1F(HistName.c_str(),HistName.c_str(),1000,-1.05,98.95); // GeV
     hm->registerHisto(h_emcalin_lg_tower_calib[i_tower]);
   }
 
-  // HCALIN LG
+  // HCALIN LG QA
   TH1F *h_hcalin_lg_tower_calib[16];
   for(int i_tower = 0; i_tower < 16; ++i_tower)
   {
     string HistName = Form("h_hcalin_lg_tower_%d_calib",i_tower);
-    h_hcalin_lg_tower_calib[i_tower] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,14.5);
+    h_hcalin_lg_tower_calib[i_tower] = new TH1F(HistName.c_str(),HistName.c_str(),1000,-1.05,98.95);
     hm->registerHisto(h_hcalin_lg_tower_calib[i_tower]);
   }
 
-  // HCALOUT LG
+  // HCALOUT LG QA
   TH1F *h_hcalout_lg_tower_calib[16];
   for(int i_tower = 0; i_tower < 16; ++i_tower)
   {
     string HistName= Form("h_hcalout_lg_tower_%d_calib",i_tower);
-    h_hcalout_lg_tower_calib[i_tower] = new TH1F(HistName.c_str(),HistName.c_str(),100,-0.5,14.5);
+    h_hcalout_lg_tower_calib[i_tower] = new TH1F(HistName.c_str(),HistName.c_str(),1000,-1.05,98.95);
     hm->registerHisto(h_hcalout_lg_tower_calib[i_tower]);
   }
 
-  TH2F *h_tower_energy_calib = new TH2F("h_tower_energy_calib","h_tower_energy_calib",105,-1.05,1.05,100,-0.5,14.5);
+  // EMCal + HCALOUT QA
+  TH2F *h_tower_energy_calib = new TH2F("h_tower_energy_calib","h_tower_energy_calib",105,-1.05,1.05,2000,-1.05,198.95);
   hm->registerHisto(h_tower_energy_calib);
 
   // help index files with TChain

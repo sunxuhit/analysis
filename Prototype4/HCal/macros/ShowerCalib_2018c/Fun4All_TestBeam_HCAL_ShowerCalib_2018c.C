@@ -15,7 +15,7 @@ R__LOAD_LIBRARY(libPrototype4.so)
 R__LOAD_LIBRARY(/direct/phenix+u/xusun/WorkSpace/sPHENIX/install/lib/libProto4HCalShowerCalib_2018c.so)
 #endif
 
-int Fun4All_TestBeam_HCAL_ShowerCalib_2018c(const int nEvents = 100000, const string runID = "2610") // -8 GeV meson
+int Fun4All_TestBeam_HCAL_ShowerCalib_2018c(const int nEvents = 5000000, const int runID = 2610) // -8 GeV meson
 {
 
   //---------------
@@ -46,9 +46,8 @@ int Fun4All_TestBeam_HCAL_ShowerCalib_2018c(const int nEvents = 100000, const st
   // Hits file
   Fun4AllInputManager *hitsin = new Fun4AllDstInputManager("DSTin");
   std::string inputfile;
-  if(!_is_sim) inputfile= Form("/sphenix/data/data02/sphenix/t1044/production/production_HCal_0502/beam_0000%s-0000.root",runID.c_str());
-  if(_is_sim) inputfile = Form("/sphenix/user/xusun/Simulation/Production/BeamTest_24GeV_%s.root",runID.c_str());
-  // if(!_is_sim) inputfile= Form("/sphenix/user/xusun/TestBeam/Production/beam_0000%s.root",runID.c_str());
+  if(!_is_sim) inputfile= Form("/sphenix/data/data02/sphenix/t1044/production/production_HCal_0502/beam_0000%d-0000.root",runID);
+  if(_is_sim) inputfile = Form("/sphenix/user/xusun/Simulation/Production/BeamTest_24GeV_%d.root",runID);
   hitsin->fileopen(inputfile);
 //  hitsin->AddListFile(inputFile); // you can also choose this and give a list of DST file names in the file.
   se->registerInputManager(hitsin);
@@ -56,8 +55,8 @@ int Fun4All_TestBeam_HCAL_ShowerCalib_2018c(const int nEvents = 100000, const st
   //load your analysis module.
   gSystem->Load("/direct/phenix+u/xusun/WorkSpace/sPHENIX/install/lib/libProto4HCalShowerCalib_2018c.so");
   std::string outputfile;
-  if(!_is_sim) outputfile = Form("/sphenix/user/xusun/TestBeam/ShowerCalib_2018c/Proto4ShowerInfoRaw_%s_2018c.root",runID.c_str());
-  if(_is_sim) outputfile = Form("/sphenix/user/xusun/Simulation/ShowerCalib_2018c/Proto4ShowerInfoSIM_%s_2018c.root",runID.c_str());
+  if(!_is_sim) outputfile = Form("/sphenix/user/xusun/TestBeam/ShowerCalib_2018c/Proto4ShowerInfoRaw_%d_2018c.root",runID);
+  if(_is_sim) outputfile = Form("/sphenix/user/xusun/Simulation/ShowerCalib_2018c/Proto4ShowerInfoSIM_%d_2018c.root",runID);
 
   // This one is an example defined in ../ExampleAnalysisModule/
   Proto4ShowerCalib* hcal_ana = new Proto4ShowerCalib(outputfile.c_str());
