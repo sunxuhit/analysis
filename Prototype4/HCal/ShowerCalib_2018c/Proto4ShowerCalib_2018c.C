@@ -29,6 +29,7 @@
 #include <TNtuple.h>
 #include <TVector3.h>
 #include <TChain.h>
+#include <TMath.h>
 
 #include <algorithm>
 #include <cassert>
@@ -55,6 +56,12 @@ Proto4ShowerCalib::Proto4ShowerCalib(const std::string &filename)
 
   _eval_run.reset();
   _shower.reset();
+
+  _mInPut_flag = 1;
+  _mStartEvent = -1;
+  _mStopEvent = -1;
+  _mEnergy = -1;
+  _mNumOfEvents = -1;
 }
 
 Proto4ShowerCalib::~Proto4ShowerCalib()
@@ -648,11 +655,14 @@ int Proto4ShowerCalib::process_event(PHCompositeNode *topNode)
     _shower.hcalout_lg_e_calib = hcalout_sum_lg_e_calib;
   }
 
-  float energy_calib = emcal_sum_lg_e_calib + hcalout_sum_lg_e_calib;
+  float energy_sum_calib = emcal_sum_lg_e_calib + hcalout_sum_lg_e_calib;
   float asym_calib = (emcal_sum_lg_e_calib - hcalout_sum_lg_e_calib)/(emcal_sum_lg_e_calib + hcalout_sum_lg_e_calib);
   TH2F *h_tower_energy_calib = dynamic_cast<TH2F *>(hm->getHisto("h_tower_energy_calib"));
   assert(h_tower_energy_calib);
-  if(emcal_sum_lg_e_calib > 0.0 && hcalout_sum_lg_e_calib > 0.0) h_tower_energy_calib->Fill(asym_calib,energy_calib); 
+  if(emcal_sum_lg_e_calib > 0.0 && hcalout_sum_lg_e_calib > 0.0) 
+  {
+    h_tower_energy_calib->Fill(asym_calib,energy_sum_calib); 
+  }
 
   _eval_run.sum_E_CEMC = emcal_sum_lg_e_calib;
   _eval_run.sum_E_HCAL_IN = hcalin_sum_lg_e_calib;
@@ -691,4 +701,243 @@ int Proto4ShowerCalib::getChannelNumber(int row, int column)
   }
 
   return -1;
+}
+
+//---------------------Shower Calibration Analysis----------------------
+int Proto4ShowerCalib::InitAna()
+{
+  if(_is_sim) _mMode = "SIM";
+  if(!_is_sim) _mMode = "Calib";
+  string inputdir = "/sphenix/user/xusun/TestBeam/ShowerCalib_2018c/";
+  string InPutList = Form("/direct/phenix+u/xusun/WorkSpace/sPHENIX/analysis/Prototype4/HCal/macros/list/ShowerCalib_2018c/Proto4ShowerInfo%s_%dGeV.list",_mMode.c_str(),_mEnergy);
+
+  mChainInPut = new TChain("HCAL_Info");
+
+  if (!InPutList.empty())   // if input file is ok
+  { 
+    cout << "Open input database file list: " << InPutList.c_str() << endl;
+    ifstream in(InPutList.c_str());  // input stream
+    if(in)
+    { 
+      cout << "input database file list is ok" << endl;
+      char str[255];       // char array for each file name
+      Long64_t entries_save = 0;
+      while(in)
+      { 
+	in.getline(str,255);  // take the lines of the file list
+	if(str[0] != 0)
+	{ 
+	  string addfile;
+	  addfile = str;
+	  addfile = inputdir+addfile;
+	  mChainInPut->AddFile(addfile.c_str(),-1,"HCAL_Info");
+	  long file_entries = mChainInPut->GetEntries();
+	  cout << "File added to data chain: " << addfile.c_str() << " with " << (file_entries-entries_save) << " entries" << endl;
+	  entries_save = file_entries;
+	}
+      }
+    }
+    else
+    { 
+      cout << "WARNING: input database file input is problemtic" << endl;
+      _mInPut_flag = 0;
+    }
+  }
+
+  // Set the input tree
+  if (_mInPut_flag == 1 && !mChainInPut->GetBranch( "info" ))
+  {
+    cerr << "ERROR: Could not find branch 'info' in tree!" << endl;
+  }
+
+  _mInfo = new Proto4ShowerCalib::Eval_Run();
+  _mShower = new Proto4ShowerCalib::HCAL_Shower();
+  if(_mInPut_flag == 1)
+  {
+    mChainInPut->SetBranchAddress("info", &_mInfo);
+    mChainInPut->SetBranchAddress("shower", &_mShower);
+
+    long NumOfEvents = (long)mChainInPut->GetEntries();
+    cout << "total number of events: " << NumOfEvents << endl;
+    _mStartEvent = 0;
+    _mStopEvent = 100;
+    if(_mNumOfEvents < NumOfEvents) _mStopEvent = _mNumOfEvents;
+    if(_mNumOfEvents < 0) _mStopEvent = NumOfEvents;
+
+    cout << "New nStartEvent = " << _mStartEvent << ", new nStopEvent = " << _mStopEvent << endl;
+  }
+
+  if(!_is_sim)
+  {
+    h_mMomentum = new TH1F("h_mMomentum", "h_mMomentum", 241, -120.5, 120.5);
+    h_mAsymmEnergy = new TH2F("h_mAsymmEnergy","h_mAsymmEnergy",105,-1.05,1.05,2000,-1.05,198.95);
+    h_mAsymmEnergy_electron = new TH2F("h_mAsymmEnergy_electron","h_mAsymmEnergy_electron",105,-1.05,1.05,2000,-1.05,198.95);
+    h_mAsymmEnergy_pion = new TH2F("h_mAsymmEnergy_pion","h_mAsymmEnergy_pion",105,-1.05,1.05,2000,-1.05,198.95);
+
+    // balancing
+    h_mAsymmEnergy_balancing = new TH2F("h_mAsymmEnergy_balancing","h_mAsymmEnergy_balancing",105,-1.05,1.05,2000,-1.05,198.95);
+    h_mAsymmEnergy_electron_balancing = new TH2F("h_mAsymmEnergy_electron_balancing","h_mAsymmEnergy_electron_balancing",105,-1.05,1.05,2000,-1.05,198.95);
+    h_mAsymmEnergy_pion_balancing = new TH2F("h_mAsymmEnergy_pion_balancing","h_mAsymmEnergy_pion_balancing",105,-1.05,1.05,2000,-1.05,198.95);
+
+    // leveling correction
+    h_mAsymmEnergy_leveling = new TH2F("h_mAsymmEnergy_leveling","h_mAsymmEnergy_leveling",105,-1.05,1.05,2000,-1.05,198.95);
+    h_mAsymmEnergy_electron_leveling = new TH2F("h_mAsymmEnergy_electron_leveling","h_mAsymmEnergy_electron_leveling",105,-1.05,1.05,2000,-1.05,198.95);
+    h_mAsymmEnergy_pion_leveling = new TH2F("h_mAsymmEnergy_pion_leveling","h_mAsymmEnergy_pion_leveling",105,-1.05,1.05,2000,-1.05,198.95);
+
+
+    // Outer HCal only study
+    h_mAsymmEnergy_MIP = new TH2F("h_mAsymmEnergy_MIP","h_mAsymmEnergy_MIP",105,-1.05,1.05,2000,-1.05,198.95);
+    h_mEnergyOut_electron = new TH1F("h_mEnergyOut_electron","h_mEnergyOut_electron",2000,-1.05,198.95);
+    h_mEnergyOut_pion = new TH1F("h_mEnergyOut_pion","h_mEnergyOut_pion",2000,-1.05,198.95);
+  }
+
+  // initialize momIndex map
+  const float momentum[12] = {3.0,4.0,5.0,6.0,8.0,12.0,16.0,20.0,24.0,28.0,40.0,50.0};
+  map_momIndex.clear();
+  for(int i_mom = 0; i_mom < 12; ++i_mom)
+  {
+    float temp_mom = momentum[i_mom];
+    int temp_index = i_mom;
+    map_momIndex[temp_mom] = temp_index;
+  }
+  /*
+  for(std::map<float,int>::iterator it=map_momIndex.begin(); it!=map_momIndex.end(); ++it)
+  {
+    cout << it->first << " => " << it->second << endl;
+  }
+  */
+
+  return 0;
+}
+
+int Proto4ShowerCalib::MakeAna()
+{
+  cout << "Make()" << endl;
+
+  const float c_in_leveling[12] = {0.797772, 1.0791, 0.880801, 0.911312, 0.786898, 0.82447, 0.797038, 0.807286, 0.790069, 0.783492, 0.790613, 0.793504};
+  const float c_out_leveling[12] = {1.33957, 0.931703, 1.15651, 1.10781, 1.37139, 1.27049, 1.34164, 1.31357, 1.36186, 1.38186, 1.36025, 1.35178}; 
+
+  unsigned long start_event_use = _mStartEvent;
+  unsigned long stop_event_use = _mStopEvent;
+
+  mChainInPut->SetBranchAddress("info", &_mInfo);
+  mChainInPut->SetBranchAddress("shower", &_mShower);
+  mChainInPut->GetEntry(0);
+
+  for(unsigned long i_event = start_event_use; i_event < stop_event_use; ++i_event)
+  // for(unsigned long i_event = 20; i_event < 40; ++i_event)
+  {
+    if (!mChainInPut->GetEntry( i_event )) // take the event -> information is stored in event
+      break;  // end of data chunk
+
+    if (i_event != 0  &&  i_event % 1000 == 0)
+      cout << "." << flush;
+    if (i_event != 0  &&  i_event % 10000 == 0)
+    {
+      if((stop_event_use-start_event_use) > 0)
+      {
+	double event_percent = 100.0*((double)(i_event-start_event_use))/((double)(stop_event_use-start_event_use));
+	cout << " " << i_event-start_event_use << " (" << event_percent << "%) " << "\n" << "==> Processing data (ShowerCalib) " << flush;
+      }
+    }
+
+    if(!_is_sim) // beam test data
+    {
+      const bool good_electron = _mInfo->good_e;
+      const bool good_pion = _mInfo->good_anti_e;
+
+      const float beam_momentum = _mInfo->beam_mom;
+      h_mMomentum->Fill(beam_momentum);
+
+      // find momentum index
+      int momIndex = -1;
+      std::map<float,int>::iterator it_momId = map_momIndex.find(TMath::Abs(beam_momentum));
+      if(it_momId == map_momIndex.end())
+      {
+	std::cout << "Make() -> could not find in beam lists!" << std::endl;
+	return -999;
+      }
+      else
+      {
+	// std::cout << "Make() -> beam momentum: " << it_momId->first << " => momIndex: " << it_momId->second << std::endl;
+	momIndex = it_momId->second;
+      }
+      const float c_in = c_in_leveling[momIndex];
+      const float c_out = c_out_leveling[momIndex];
+
+      const float energy_emcal_calib = _mShower->emcal_lg_e_calib;
+      const float energy_hcalout_calib = _mShower->hcalout_lg_e_calib;
+
+      float energy_calib = energy_emcal_calib + energy_hcalout_calib;
+      float asymm_calib = (energy_emcal_calib - energy_hcalout_calib)/(energy_emcal_calib + energy_hcalout_calib);
+
+      if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001) // remove ped
+      { // extract MIP
+	h_mAsymmEnergy->Fill(asymm_calib,energy_calib);
+	if(good_electron) h_mAsymmEnergy_electron->Fill(asymm_calib,energy_calib);
+	if(good_pion) h_mAsymmEnergy_pion->Fill(asymm_calib,energy_calib);
+      }
+
+      // 1 sigma MIP energy cut for HCALOUT only study
+      const double MIP_cut = MIP_mean+MIP_width;
+      if(energy_emcal_calib <= MIP_cut && energy_hcalout_calib > 0.001 && energy_calib > MIP_cut)
+      { // OHCal with MIP event through EMCal
+	h_mAsymmEnergy_MIP->Fill(asymm_calib,energy_calib);
+	if(good_electron) h_mEnergyOut_electron->Fill(energy_hcalout_calib);
+	if(good_pion) h_mEnergyOut_pion->Fill(energy_hcalout_calib);
+      }
+
+      // 3 sigma MIP energy cut for Shower Calibration
+      const double MIP_energy_cut = MIP_mean+3.0*MIP_width;
+      if(energy_emcal_calib > 0.01 && energy_hcalout_calib > 0.001 && energy_calib > MIP_energy_cut)
+      { 
+	// balancing without muon
+	h_mAsymmEnergy_balancing->Fill(asymm_calib,energy_calib);
+	if(good_electron) h_mAsymmEnergy_electron_balancing->Fill(asymm_calib,energy_calib);
+	if(good_pion) h_mAsymmEnergy_pion_balancing->Fill(asymm_calib,energy_calib);
+
+	// apply leveling
+	const float energy_leveling = c_in*energy_emcal_calib + c_out*energy_hcalout_calib;
+	const float asymm_leveling = (c_in*energy_emcal_calib - c_out*energy_hcalout_calib)/energy_leveling;
+	h_mAsymmEnergy_leveling->Fill(asymm_leveling,energy_leveling);
+	if(good_electron) h_mAsymmEnergy_electron_leveling->Fill(asymm_leveling,energy_leveling);
+	if(good_pion) h_mAsymmEnergy_pion_leveling->Fill(asymm_leveling,energy_leveling);
+      }
+    }
+  }
+
+  cout << "." << flush;
+  cout << " " << stop_event_use-start_event_use << "(" << 100 << "%)";
+  cout << endl;
+
+  return 1;
+}
+
+int Proto4ShowerCalib::FinishAna()
+{
+  cout << "Finish()" << endl;
+  mFile_OutPut = new TFile(_filename.c_str(),"RECREATE");
+  mFile_OutPut->cd();
+  if(!_is_sim) // beam test data
+  {
+    h_mMomentum->Write();
+    h_mAsymmEnergy->Write();
+    h_mAsymmEnergy_electron->Write();
+    h_mAsymmEnergy_pion->Write();
+
+    h_mAsymmEnergy_balancing->Write();
+    h_mAsymmEnergy_electron_balancing->Write();
+    h_mAsymmEnergy_pion_balancing->Write();
+
+    h_mAsymmEnergy_leveling->Write();
+    h_mAsymmEnergy_electron_leveling->Write();
+    h_mAsymmEnergy_pion_leveling->Write();
+
+    h_mAsymmEnergy_MIP->Write();
+    h_mEnergyOut_electron->Write();
+    h_mEnergyOut_pion->Write();
+  }
+  mFile_OutPut->Close();
+
+  return 1;
 }

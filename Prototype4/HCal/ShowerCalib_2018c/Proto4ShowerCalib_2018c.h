@@ -7,6 +7,7 @@
 #include <stdint.h>
 #include <fstream>
 #include <string>
+#include <map>
 
 class PHCompositeNode;
 class PHG4HitContainer;
@@ -49,6 +50,24 @@ class Proto4ShowerCalib : public SubsysReco
   {
     _is_sim = b;
   }
+
+  // ShowerCalib Analysis
+  int InitAna();
+
+  int MakeAna();
+
+  int FinishAna();
+
+  void set_energy(int energy)
+  {
+    _mEnergy = energy;
+  }
+
+  void set_numofevents(int numofenvets)
+  {
+    _mNumOfEvents = numofenvets;
+  }
+
 
   class Eval_Run : public TObject
   {
@@ -216,6 +235,49 @@ class Proto4ShowerCalib : public SubsysReco
 
   //! hcal infromation. To be copied to output TTree T
   HCAL_Shower _shower;
+
+  // TowerCalib Analysis
+  TFile *mFile_OutPut;
+  TChain *mChainInPut;
+  unsigned long _mStartEvent;
+  unsigned long _mStopEvent;
+  int _mEnergy;
+  int _mNumOfEvents;
+  int _mInPut_flag;
+  std::string _mMode;
+
+  Eval_Run *_mInfo;
+  HCAL_Shower *_mShower;
+
+  TH1F *h_mMomentum;
+  TH2F *h_mAsymmEnergy; // MIP study
+  TH2F *h_mAsymmEnergy_electron;
+  TH2F *h_mAsymmEnergy_pion;
+
+  // balancing
+  TH2F *h_mAsymmEnergy_balancing;
+  TH2F *h_mAsymmEnergy_electron_balancing;
+  TH2F *h_mAsymmEnergy_pion_balancing;
+
+  // leveling correction
+  TH2F *h_mAsymmEnergy_leveling;
+  TH2F *h_mAsymmEnergy_electron_leveling;
+  TH2F *h_mAsymmEnergy_pion_leveling;
+
+  // Outer HCal only study
+  TH2F *h_mAsymmEnergy_MIP;
+  TH1F *h_mEnergyOut_electron; // hadron MIP through EMCal
+  TH1F *h_mEnergyOut_pion;
+  // TH1F *h_mEnergyOut_electron_ShowerCalib;
+  // TH1F *h_mEnergyOut_pion_ShowerCalib;
+
+  // inner HCAL MIP energy extracted from muon
+  // const double MIP_mean  = 0.648114;
+  // const double MIP_width = 0.157061;
+  const double MIP_mean  = 0.65;
+  const double MIP_width = 0.16;
+
+  std::map<float,int> map_momIndex; // mom vs index
 
   int getChannelNumber(int column, int row);
 };
