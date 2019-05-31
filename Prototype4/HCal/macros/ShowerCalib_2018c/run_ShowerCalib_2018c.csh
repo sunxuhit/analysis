@@ -60,4 +60,3 @@ sleep 10
 echo  run shower calibration for 50 GeV
 root -l -b -q  TestBeam_HCAL_ShowerCalibAna_2018c.C\(-1,50\)
 echo finish 50 GeV shower calibration
-sleep 10

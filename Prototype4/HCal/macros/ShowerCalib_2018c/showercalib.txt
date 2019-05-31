@@ -1,0 +1,12 @@
+3 GeV: showercalib = -0.129159
+4 GeV: showercalib = 3.88287
+5 GeV: showercalib = 3.19902
+6 GeV: showercalib = 3.23933
+8 GeV: showercalib = 2.88179
+12 GeV: showercalib = 2.71637
+16 GeV: showercalib = 2.53637
+20 GeV: showercalib = 2.48091
+24 GeV: showercalib = 2.38543
+28 GeV: showercalib = 2.3398
+40 GeV: showercalib = 2.4002
+50 GeV: showercalib = 2.38418

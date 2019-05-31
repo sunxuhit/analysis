@@ -11,7 +11,7 @@
 
 void extractShowerCalibFactor() // use 8 GeV & run 422 for shower calbrtion
 {
-  string inputfile = "/sphenix/user/xusun/TestBeam/ShowerCalibAna/Proto4ShowerInfoRAW_0422.root";
+  string inputfile = "/sphenix/user/xusun/TestBeam/ShowerCalibAna/ROOT5/Proto4ShowerInfoRAW_0422.root";
   TFile *File_InPut = TFile::Open(inputfile.c_str());
   TH2F *h_mAsymmEnergy_pion_levl = (TH2F*)File_InPut->Get("h_mAsymmEnergy_pion_leveling");
   TH1F *h_mEnergy_pion_levl = (TH1F*)h_mAsymmEnergy_pion_levl->ProjectionY()->Clone("h_mEnergy_pion_levl");

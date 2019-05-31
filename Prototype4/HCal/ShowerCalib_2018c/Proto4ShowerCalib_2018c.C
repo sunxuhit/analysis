@@ -878,6 +878,26 @@ int Proto4ShowerCalib::MakeAna()
 	if(good_pion) h_mAsymmEnergy_pion->Fill(asymm_calib,energy_calib);
       }
 
+      // 3 sigma MIP energy cut for Balancing Correction
+      const double MIP_energy_cut = MIP_mean+3.0*MIP_width;
+      if(energy_emcal_calib > 0.01 && energy_hcalout_calib > 0.001 && energy_calib > MIP_energy_cut)
+      { 
+	// balancing without muon
+	h_mAsymmEnergy_balancing->Fill(asymm_calib,energy_calib);
+	if(good_electron) h_mAsymmEnergy_electron_balancing->Fill(asymm_calib,energy_calib);
+	if(good_pion) h_mAsymmEnergy_pion_balancing->Fill(asymm_calib,energy_calib);
+      }
+
+      if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001) // remove ped
+      {
+	// apply leveling
+	const float energy_leveling = c_in*energy_emcal_calib + c_out*energy_hcalout_calib;
+	const float asymm_leveling = (c_in*energy_emcal_calib - c_out*energy_hcalout_calib)/energy_leveling;
+	h_mAsymmEnergy_leveling->Fill(asymm_leveling,energy_leveling);
+	if(good_electron) h_mAsymmEnergy_electron_leveling->Fill(asymm_leveling,energy_leveling);
+	if(good_pion) h_mAsymmEnergy_pion_leveling->Fill(asymm_leveling,energy_leveling);
+      }
+
       // 1 sigma MIP energy cut for HCALOUT only study
       const double MIP_cut = MIP_mean+MIP_width;
       if(energy_emcal_calib <= MIP_cut && energy_hcalout_calib > 0.001 && energy_calib > MIP_cut)
@@ -887,22 +907,6 @@ int Proto4ShowerCalib::MakeAna()
 	if(good_pion) h_mEnergyOut_pion->Fill(energy_hcalout_calib);
       }
 
-      // 3 sigma MIP energy cut for Shower Calibration
-      const double MIP_energy_cut = MIP_mean+3.0*MIP_width;
-      if(energy_emcal_calib > 0.01 && energy_hcalout_calib > 0.001 && energy_calib > MIP_energy_cut)
-      { 
-	// balancing without muon
-	h_mAsymmEnergy_balancing->Fill(asymm_calib,energy_calib);
-	if(good_electron) h_mAsymmEnergy_electron_balancing->Fill(asymm_calib,energy_calib);
-	if(good_pion) h_mAsymmEnergy_pion_balancing->Fill(asymm_calib,energy_calib);
-
-	// apply leveling
-	const float energy_leveling = c_in*energy_emcal_calib + c_out*energy_hcalout_calib;
-	const float asymm_leveling = (c_in*energy_emcal_calib - c_out*energy_hcalout_calib)/energy_leveling;
-	h_mAsymmEnergy_leveling->Fill(asymm_leveling,energy_leveling);
-	if(good_electron) h_mAsymmEnergy_electron_leveling->Fill(asymm_leveling,energy_leveling);
-	if(good_pion) h_mAsymmEnergy_pion_leveling->Fill(asymm_leveling,energy_leveling);
-      }
     }
   }
 
