@@ -41,7 +41,7 @@ void extractShowerCalibFactor_2018c()
     h_mEnergy_leveling[i_energy] = (TH1F*)h_mAsymmEnergy_leveling[i_energy]->ProjectionY()->Clone("h_mEnergy_leveling");
   }
 
-  TCanvas *c_Energy = new TCanvas("c_Energy","c_Energy",1500,2000);
+  TCanvas *c_Energy = new TCanvas("c_Energy","c_Energy",2000,1500);
   c_Energy->Divide(4,3);
   for(int i_pad = 0; i_pad < 12; ++i_pad)
   {
@@ -59,7 +59,7 @@ void extractShowerCalibFactor_2018c()
     h_mEnergy_balancing[i_pad]->GetXaxis()->SetRangeUser(0.0,momentum[i_pad]);
     h_mEnergy_balancing[i_pad]->GetYaxis()->SetTitle();
     h_mEnergy_balancing[i_pad]->GetYaxis()->CenterTitle();
-    h_mEnergy_balancing[i_pad]->GetYaxis()->SetRangeUser(0.0,1.4*h_mEnergy_balancing[i_pad]->GetMaximum());
+    h_mEnergy_balancing[i_pad]->GetYaxis()->SetRangeUser(0.0,1.7*h_mEnergy_balancing[i_pad]->GetMaximum());
     h_mEnergy_balancing[i_pad]->SetLineColor(1);
     h_mEnergy_balancing[i_pad]->SetLineWidth(1);
     h_mEnergy_balancing[i_pad]->SetLineStyle(1);
@@ -71,7 +71,7 @@ void extractShowerCalibFactor_2018c()
     h_mEnergy_leveling[i_pad]->Draw("h Same");
 
     string FuncName = Form("f_gaus_%d",i_pad);
-    f_gaus[i_pad] = new TF1(FuncName.c_str(),"gaus",0,5);
+    f_gaus[i_pad] = new TF1(FuncName.c_str(),"gaus",0,50);
     f_gaus[i_pad]->SetParameter(0,1.0);
     f_gaus[i_pad]->SetParameter(1,h_mEnergy_leveling[i_pad]->GetMean());
     f_gaus[i_pad]->SetParameter(2,1.0);
@@ -99,13 +99,16 @@ void extractShowerCalibFactor_2018c()
 
     string leg_energy = Form("energy = %1.2f #pm %1.2f",energy_mean,energy_width);
     string leg_showercalib = Form("showercalib: %1.2f",showercalib[i_pad]);
-    leg[i_pad] = new TLegend(0.35,0.7,0.85,0.85);
+    leg[i_pad] = new TLegend(0.35,0.6,0.85,0.85);
     leg[i_pad]->SetBorderSize(0);
     leg[i_pad]->SetFillColor(0);
+    leg[i_pad]->AddEntry(h_mEnergy_balancing[i_pad],"before balancing","l");
+    leg[i_pad]->AddEntry(h_mEnergy_leveling[i_pad],"after balancing","l");
     leg[i_pad]->AddEntry(f_gaus[i_pad],leg_energy.c_str(),"l");
     leg[i_pad]->AddEntry((TObject*)0,leg_showercalib.c_str()," ");
     leg[i_pad]->Draw("same");
   }
+  c_Energy->SaveAs("../figures/HCAL_ShowerCalib_2018c/c_EnergyLeveling_2018c.eps");
 
 
   ofstream File_OutPut("showercalib.txt");

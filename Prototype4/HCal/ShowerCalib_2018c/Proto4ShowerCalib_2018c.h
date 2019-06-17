@@ -264,6 +264,11 @@ class Proto4ShowerCalib : public SubsysReco
   TH2F *h_mAsymmEnergy_electron_leveling;
   TH2F *h_mAsymmEnergy_pion_leveling;
 
+  // shower correction
+  TH2F *h_mAsymmEnergy_showercalib;
+  TH2F *h_mAsymmEnergy_electron_showercalib;
+  TH2F *h_mAsymmEnergy_pion_showercalib;
+
   // Outer HCal only study
   TH2F *h_mAsymmEnergy_MIP;
   TH1F *h_mEnergyOut_electron; // hadron MIP through EMCal
@@ -276,6 +281,8 @@ class Proto4ShowerCalib : public SubsysReco
   // const double MIP_width = 0.157061;
   const double MIP_mean  = 0.65;
   const double MIP_width = 0.16;
+
+  const double showercalib = 2.53637; // extracted with 16 GeV Test Beam Data
 
   std::map<float,int> map_momIndex; // mom vs index
 

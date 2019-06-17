@@ -36,7 +36,7 @@ void extractLevelingPar_2018c()
   float c_out[12];
   TF1 *f_pol[12];
 
-  TCanvas *c_AsymmEnergy = new TCanvas("c_AsymmEnergy","c_AsymmEnergy",1500,2000);
+  TCanvas *c_AsymmEnergy = new TCanvas("c_AsymmEnergy","c_AsymmEnergy",2000,1500);
   c_AsymmEnergy->Divide(4,3);
   for(int i_pad = 0; i_pad < 12; ++i_pad)
   {
@@ -79,6 +79,7 @@ void extractLevelingPar_2018c()
     leg->AddEntry(f_pol[i_pad],formula.c_str(),"l");
     leg->Draw("same");
   }
+  c_AsymmEnergy->SaveAs("../figures/HCAL_ShowerCalib_2018c/c_EnergyBalancing_2018c.eps");
 
   ofstream File_OutPut("leveling_corr.txt");
   for(int i_energy = 0; i_energy < 12; ++i_energy)

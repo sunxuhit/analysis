@@ -784,6 +784,10 @@ int Proto4ShowerCalib::InitAna()
     h_mAsymmEnergy_electron_leveling = new TH2F("h_mAsymmEnergy_electron_leveling","h_mAsymmEnergy_electron_leveling",105,-1.05,1.05,2000,-1.05,198.95);
     h_mAsymmEnergy_pion_leveling = new TH2F("h_mAsymmEnergy_pion_leveling","h_mAsymmEnergy_pion_leveling",105,-1.05,1.05,2000,-1.05,198.95);
 
+    // shower correction
+    h_mAsymmEnergy_showercalib = new TH2F("h_mAsymmEnergy_showercalib","h_mAsymmEnergy_showercalib",105,-1.05,1.05,2000,-1.05,198.95);
+    h_mAsymmEnergy_electron_showercalib = new TH2F("h_mAsymmEnergy_electron_showercalib","h_mAsymmEnergy_electron_showercalib",105,-1.05,1.05,2000,-1.05,198.95);
+    h_mAsymmEnergy_pion_showercalib = new TH2F("h_mAsymmEnergy_pion_showercalib","h_mAsymmEnergy_pion_showercalib",105,-1.05,1.05,2000,-1.05,198.95);
 
     // Outer HCal only study
     h_mAsymmEnergy_MIP = new TH2F("h_mAsymmEnergy_MIP","h_mAsymmEnergy_MIP",105,-1.05,1.05,2000,-1.05,198.95);
@@ -888,7 +892,7 @@ int Proto4ShowerCalib::MakeAna()
 	if(good_pion) h_mAsymmEnergy_pion_balancing->Fill(asymm_calib,energy_calib);
       }
 
-      if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001) // remove ped
+      if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001)
       {
 	// apply leveling
 	const float energy_leveling = c_in*energy_emcal_calib + c_out*energy_hcalout_calib;
@@ -897,6 +901,17 @@ int Proto4ShowerCalib::MakeAna()
 	if(good_electron) h_mAsymmEnergy_electron_leveling->Fill(asymm_leveling,energy_leveling);
 	if(good_pion) h_mAsymmEnergy_pion_leveling->Fill(asymm_leveling,energy_leveling);
       }
+
+      if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001)
+      {
+	// apply shower calibration
+	const float energy_showercalib = showercalib*c_in*energy_emcal_calib + showercalib*c_out*energy_hcalout_calib;
+	const float asymm_showercalib = (showercalib*c_in*energy_emcal_calib - showercalib*c_out*energy_hcalout_calib)/energy_showercalib;
+	h_mAsymmEnergy_showercalib->Fill(asymm_showercalib,energy_showercalib);
+	if(good_electron) h_mAsymmEnergy_showercalib->Fill(asymm_showercalib,energy_showercalib);
+	if(good_pion) h_mAsymmEnergy_pion_showercalib->Fill(asymm_showercalib,energy_showercalib);
+      }
+
 
       // 1 sigma MIP energy cut for HCALOUT only study
       const double MIP_cut = MIP_mean+MIP_width;
@@ -936,6 +951,10 @@ int Proto4ShowerCalib::FinishAna()
     h_mAsymmEnergy_leveling->Write();
     h_mAsymmEnergy_electron_leveling->Write();
     h_mAsymmEnergy_pion_leveling->Write();
+
+    h_mAsymmEnergy_showercalib->Write();
+    h_mAsymmEnergy_electron_showercalib->Write();
+    h_mAsymmEnergy_pion_showercalib->Write();
 
     h_mAsymmEnergy_MIP->Write();
     h_mEnergyOut_electron->Write();

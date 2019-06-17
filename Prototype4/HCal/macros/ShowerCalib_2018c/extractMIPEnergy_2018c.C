@@ -51,7 +51,7 @@ void extractMIPEnergy_2018c()
   TLegend *leg_MIP[12];
   float MIP_mean[12];
   float MIP_width[12];
-  TCanvas *c_MIPEnergy = new TCanvas("c_MIPEnergy","c_MIPEnergy",1500,2000);
+  TCanvas *c_MIPEnergy = new TCanvas("c_MIPEnergy","c_MIPEnergy",2000,1500);
   c_MIPEnergy->Divide(4,3);
   for(int i_pad = 0; i_pad < 12; ++i_pad)
   {
