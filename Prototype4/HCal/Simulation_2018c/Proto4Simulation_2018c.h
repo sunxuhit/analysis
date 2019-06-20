@@ -50,20 +50,22 @@ class Proto4Simulation : public SubsysReco
   //! output root file name
   std::string _filename;
 
-  PHG4HitContainer *mHIT_CEMC; // G4Hit for EMCal 
-  PHG4HitContainer *mABS_CEMC; // G4Hit for absorber
-  PHG4HitContainer *mHIT_HCALIN;
-  PHG4HitContainer *mABS_HCALIN;
-  PHG4HitContainer *mHIT_HCALOUT;
-  PHG4HitContainer *mABS_HCALOUT;
-  PHG4HitContainer *mHIT_CRYO;
-  PHG4HitContainer *mHIT_BLACKHOLE;
+  PHG4HitContainer *mG4HIT_CEMC; // G4Hit for EMCal 
+  PHG4HitContainer *mG4ABS_CEMC; // G4Hit for absorber
+  PHG4HitContainer *mG4HIT_HCALIN;
+  PHG4HitContainer *mG4ABS_HCALIN;
+  PHG4HitContainer *mG4HIT_HCALOUT;
+  PHG4HitContainer *mG4ABS_HCALOUT;
+  PHG4HitContainer *mG4HIT_CRYO;
+  PHG4HitContainer *mG4HIT_BLACKHOLE;
 
   RawTowerContainer *mTOWER_CALIB_LG_CEMC; // tower for EMCal
   RawTowerContainer *mTOWER_CALIB_LG_HCALIN;
   RawTowerContainer *mTOWER_CALIB_LG_HCALOUT;
 
   PHG4TruthInfoContainer* _truth_container;
+
+  int initHisto(); // register histograms
 
   // utilities
   int getNodes(PHCompositeNode *topNode); // extract nodes needed for analysis

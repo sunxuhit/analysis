@@ -16,7 +16,7 @@ R__LOAD_LIBRARY(libfun4all.so)
 R__LOAD_LIBRARY(/direct/phenix+u/xusun/WorkSpace/sPHENIX/install/lib/libProto4Simulation_2018c.so)
 #endif
 
-int Fun4All_Simulation_2018c(const int nEvents = 100, const int beam_mom = 24)
+int Fun4All_Simulation_2018c(const int nEvents = 100, const int beam_mom = 12)
 {
 
   //---------------
@@ -38,7 +38,8 @@ int Fun4All_Simulation_2018c(const int nEvents = 100, const int beam_mom = 24)
 
   // Hits file
   Fun4AllInputManager *hitsin = new Fun4AllDstInputManager("DSTin");
-  std::string inputlist = "./list/Simulation_2018c_" + std::to_string(beam_mom) + "GeV.list";
+  // std::string inputlist = "./list/Simulation_2018c_electron_" + std::to_string(beam_mom) + "GeV.list";
+  std::string inputlist = "./list/Simulation_2018c_pion_" + std::to_string(beam_mom) + "GeV.list";
   hitsin->AddListFile(inputlist); // you can also choose this and give a list of DST file names in the file.
   se->registerInputManager(hitsin);
 
@@ -46,7 +47,8 @@ int Fun4All_Simulation_2018c(const int nEvents = 100, const int beam_mom = 24)
   gSystem->Load("/direct/phenix+u/xusun/WorkSpace/sPHENIX/install/lib/libProto4Simulation_2018c.so");
 
   //load your analysis module.
-  std::string outputfile = "/sphenix/user/xusun/Simulation/ShowerCalib/Proto4Simulation_2018c_" + std::to_string(beam_mom) + "GeV.root";
+  // std::string outputfile = "/sphenix/user/xusun/Simulation/ShowerCalib/Proto4Simulation_2018c_electron_" + std::to_string(beam_mom) + "GeV.root";
+  std::string outputfile = "/sphenix/user/xusun/Simulation/ShowerCalib/Proto4Simulation_2018c_pion_" + std::to_string(beam_mom) + "GeV.root";
   Proto4Simulation *hcal_ana = new Proto4Simulation(outputfile.c_str());
   se->registerSubsystem(hcal_ana);
 
