@@ -493,7 +493,7 @@ int Proto4ShowerCalib::process_event(PHCompositeNode *topNode)
   hNormalization->Fill("good_e", good_e);
   hNormalization->Fill("good_anti_e", good_anti_e);
 
-  // process HCALIN LG
+  // process EMCAL LG
   double emcal_sum_lg_e_raw = 0;
   double emcal_sum_lg_e_calib = 0;
   {
@@ -502,7 +502,7 @@ int Proto4ShowerCalib::process_event(PHCompositeNode *topNode)
     {
       RawTower *tower = it->second;
       assert(tower);
-      // cout << "HCALIN RAW: ";
+      // cout << "EMCAL RAW: ";
       // tower->identify();
 
       const int col = tower->get_bineta();
@@ -708,7 +708,7 @@ int Proto4ShowerCalib::InitAna()
 {
   if(_is_sim) _mMode = "SIM";
   if(!_is_sim) _mMode = "Calib";
-  string inputdir = "/sphenix/user/xusun/TestBeam/ShowerCalib_2018c/";
+  string inputdir = Form("/sphenix/user/xusun/TestBeam/ShowerCalib_2018c/%dGeV/",_mEnergy);
   string InPutList = Form("/direct/phenix+u/xusun/WorkSpace/sPHENIX/analysis/Prototype4/HCal/macros/list/ShowerCalib_2018c/Proto4ShowerInfo%s_%dGeV.list",_mMode.c_str(),_mEnergy);
 
   mChainInPut = new TChain("HCAL_Info");
@@ -818,8 +818,11 @@ int Proto4ShowerCalib::MakeAna()
 {
   cout << "Make()" << endl;
 
-  const float c_in_leveling[12] = {0.797772, 1.0791, 0.880801, 0.911312, 0.786898, 0.82447, 0.797038, 0.807286, 0.790069, 0.783492, 0.790613, 0.793504};
-  const float c_out_leveling[12] = {1.33957, 0.931703, 1.15651, 1.10781, 1.37139, 1.27049, 1.34164, 1.31357, 1.36186, 1.38186, 1.36025, 1.35178}; 
+  // const float c_in_leveling[12] = {0.797772, 1.0791, 0.880801, 0.911312, 0.786898, 0.82447, 0.797038, 0.807286, 0.790069, 0.783492, 0.790613, 0.793504};
+  // const float c_out_leveling[12] = {1.33957, 0.931703, 1.15651, 1.10781, 1.37139, 1.27049, 1.34164, 1.31357, 1.36186, 1.38186, 1.36025, 1.35178}; 
+
+  const float c_in_leveling[12] = {0.814269, 0.87434, 0.930247, 0.870155, 0.841073, 0.812163, 0.805016, 0.804375, 0.796104, 0.785911, 0.792748, 0.793076};
+  const float c_out_leveling[12] = {1.2955, 1.16784, 1.08106, 1.17539, 1.23298, 1.30086, 1.31963, 1.32136, 1.3443, 1.3744, 1.35398, 1.35302};
 
   unsigned long start_event_use = _mStartEvent;
   unsigned long stop_event_use = _mStopEvent;
@@ -892,7 +895,7 @@ int Proto4ShowerCalib::MakeAna()
 	if(good_pion) h_mAsymmEnergy_pion_balancing->Fill(asymm_calib,energy_calib);
       }
 
-      if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001)
+      if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001 && energy_calib > MIP_energy_cut)
       {
 	// apply leveling
 	const float energy_leveling = c_in*energy_emcal_calib + c_out*energy_hcalout_calib;
@@ -902,7 +905,7 @@ int Proto4ShowerCalib::MakeAna()
 	if(good_pion) h_mAsymmEnergy_pion_leveling->Fill(asymm_leveling,energy_leveling);
       }
 
-      if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001)
+      if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001 && energy_calib > MIP_energy_cut)
       {
 	// apply shower calibration
 	const float energy_showercalib = showercalib*c_in*energy_emcal_calib + showercalib*c_out*energy_hcalout_calib;

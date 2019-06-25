@@ -16,7 +16,7 @@ R__LOAD_LIBRARY(libfun4all.so)
 R__LOAD_LIBRARY(/direct/phenix+u/xusun/WorkSpace/sPHENIX/install/lib/libProto4Simulation_2018c.so)
 #endif
 
-int Fun4All_Simulation_2018c(const int nEvents = 100, const int beam_mom = 12)
+int Fun4All_Simulation_2018c(const int nEvents = 1000, const int beam_mom = 24)
 {
 
   //---------------
