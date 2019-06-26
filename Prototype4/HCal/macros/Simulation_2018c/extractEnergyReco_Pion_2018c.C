@@ -30,7 +30,6 @@ void extractEnergyReco_Pion_2018c()
   int mEnergy[12] = {3,4,5,6,8,12,16,20,24,28,40,50};
   float momentum[12];
 
-  TH1F *h_mMomentum[12];
   TH2F *h_mAsymmEnergy_leveling[12];
   TH1F *h_mEnergy_leveling[12];
   TH2F *h_mAsymmEnergy_showercalib[12];
@@ -40,17 +39,16 @@ void extractEnergyReco_Pion_2018c()
   TF1 *f_gaus[12];
   TLegend *leg[12];
 
-  for(int i_energy = 0; i_energy < 12; ++i_energy)
+  for(int i_energy = 3; i_energy < 11; ++i_energy)
   {
-    string inputfile = Form("/gpfs/mnt/gpfs02/sphenix/user/xusun/TestBeam/ShowerCalibAna_2018c/Proto4ShowerCalib_%dGeV_2018c.root",mEnergy[i_energy]);
+    string inputfile = Form("/gpfs/mnt/gpfs02/sphenix/user/xusun/Simulation/ShowerCalibAna/Proto4Simulation_2018c_pion_%dGeV.root",mEnergy[i_energy]);
     File_InPut[i_energy] = TFile::Open(inputfile.c_str());
-    h_mMomentum[i_energy] = (TH1F*)File_InPut[i_energy]->Get("h_mMomentum");
-    momentum[i_energy] = TMath::Abs(h_mMomentum[i_energy]->GetMean());
+    momentum[i_energy] = (float)mEnergy[i_energy];
 
-    h_mAsymmEnergy_leveling[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_pion_leveling");
+    h_mAsymmEnergy_leveling[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_leveling");
     h_mEnergy_leveling[i_energy] = (TH1F*)h_mAsymmEnergy_leveling[i_energy]->ProjectionY()->Clone("h_mEnergy_leveling");
 
-    h_mAsymmEnergy_showercalib[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_pion_showercalib");
+    h_mAsymmEnergy_showercalib[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_showercalib");
     h_mEnergy_showercalib[i_energy] = (TH1F*)h_mAsymmEnergy_showercalib[i_energy]->ProjectionY()->Clone("h_mEnergy_showercalib");
   }
 
@@ -63,7 +61,7 @@ void extractEnergyReco_Pion_2018c()
 
   TCanvas *c_Energy = new TCanvas("c_Energy","c_Energy",2000,1500);
   c_Energy->Divide(4,3);
-  for(int i_pad = 0; i_pad < 12; ++i_pad)
+  for(int i_pad = 3; i_pad < 11; ++i_pad)
   {
     c_Energy->cd(i_pad+1);
     c_Energy->cd(i_pad+1)->SetLeftMargin(0.15);
@@ -132,11 +130,11 @@ void extractEnergyReco_Pion_2018c()
     val_resolution[i_pad] = val_sigma[i_pad]/val_mean[i_pad];
     err_resolution[i_pad] = ErrDiv(val_sigma[i_pad],val_mean[i_pad],err_sigma[i_pad],err_mean[i_pad]);
   }
-  c_Energy->SaveAs("../figures/HCAL_ShowerCalib_2018c/c_EnergyShowerCalib_2018c.eps");
+  c_Energy->SaveAs("./figures/c_EnergyShowerCalib_2018c.eps");
 
   TGraphAsymmErrors *g_linearity = new TGraphAsymmErrors();
   TGraphAsymmErrors *g_resolution = new TGraphAsymmErrors();
-  for(int i_point = 0; i_point < 12; ++i_point)
+  for(int i_point = 3; i_point < 11; ++i_point)
   {
     g_linearity->SetPoint(i_point,momentum[i_point],val_mean[i_point]);
     g_linearity->SetPointError(i_point,0.0,0.0,err_mean[i_point],err_mean[i_point]);
@@ -145,7 +143,7 @@ void extractEnergyReco_Pion_2018c()
     g_resolution->SetPointError(i_point,0.0,0.0,err_resolution[i_point],err_resolution[i_point]);
   }
 
-  string outputfile = "/sphenix/user/xusun/TestBeam/ShowerCalibAna_2018c/T1044_2018c_pion.root";
+  string outputfile = "/sphenix/user/xusun/Simulation/ShowerCalibAna/Simulation_2018c_pion.root";
   TFile *File_OutPut = new TFile(outputfile.c_str(),"RECREATE");
   File_OutPut->cd();
   g_linearity->SetName("g_linearity_2018c_pion");

@@ -894,7 +894,8 @@ int Proto4Simulation::InitAna()
   // shower correction
   h_mAsymmEnergy_showercalib = new TH2F("h_mAsymmEnergy_showercalib","h_mAsymmEnergy_showercalib",105,-1.05,1.05,2000,-1.05,198.95);
 
-  h_mRatio_Truth = new TH1F("h_mRatio_Truth", "h_mRatio_Truth", 1000, -0.5, 99.5);
+  h_mRatio_Truth = new TH1F("h_mRatio_Truth", "h_mRatio_Truth", 1000, 0.0, 1.0);
+  h_mRatio_Tower = new TH1F("h_mRatio_Tower", "h_mRatio_Tower", 1000, 0.0, 1.0);
 
   return 0;
 }
@@ -903,8 +904,11 @@ int Proto4Simulation::MakeAna()
 {
   cout << "Make()" << endl;
 
-  const float c_in_leveling[12] = {0.814269, 0.87434, 0.930247, 0.870155, 0.841073, 0.812163, 0.805016, 0.804375, 0.796104, 0.785911, 0.792748, 0.793076};
-  const float c_out_leveling[12] = {1.2955, 1.16784, 1.08106, 1.17539, 1.23298, 1.30086, 1.31963, 1.32136, 1.3443, 1.3744, 1.35398, 1.35302};
+  // const float c_in_leveling[12] = {0.814269, 0.87434, 0.930247, 0.870155, 0.841073, 0.812163, 0.805016, 0.804375, 0.796104, 0.785911, 0.792748, 0.793076};
+  // const float c_out_leveling[12] = {1.2955, 1.16784, 1.08106, 1.17539, 1.23298, 1.30086, 1.31963, 1.32136, 1.3443, 1.3744, 1.35398, 1.35302};
+
+  const float c_in_leveling[12]  = {1.19484, 1.19484, 1.19484, 1.19484, 1.16891, 1.08596, 0.999796, 0.951548, 0.939618, 0.934458, 0.928785, 0.928785};
+  const float c_out_leveling[12] = {0.859793, 0.859793, 0.859793, 0.859793, 0.873743, 0.926652, 1.0002, 1.05365, 1.06868, 1.07543, 1.08304, 1.08304};
 
   unsigned long start_event_use = _mStartEvent;
   unsigned long stop_event_use = _mStopEvent;
@@ -957,8 +961,7 @@ int Proto4Simulation::MakeAna()
     }
 
     // 3 sigma MIP energy cut for Balancing Correction
-    // const double MIP_energy_cut = MIP_mean+3.0*MIP_width;
-    const double MIP_energy_cut = 1.0;
+    const double MIP_energy_cut = MIP_mean+3.0*MIP_width;
     if(energy_emcal_calib > 0.01 && energy_hcalout_calib > 0.001 && energy_calib > MIP_energy_cut)
     { 
       // balancing without muon
@@ -972,6 +975,22 @@ int Proto4Simulation::MakeAna()
       const float asymm_leveling = (c_in*energy_emcal_calib - c_out*energy_hcalout_calib)/energy_leveling;
       h_mAsymmEnergy_leveling->Fill(asymm_leveling,energy_leveling);
     }
+
+    if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001 && energy_calib > MIP_energy_cut)
+    {
+      // apply shower calibration
+      const float energy_showercalib = showercalib*c_in*energy_emcal_calib + showercalib*c_out*energy_hcalout_calib;
+      const float asymm_showercalib = (showercalib*c_in*energy_emcal_calib - showercalib*c_out*energy_hcalout_calib)/energy_showercalib;
+      h_mAsymmEnergy_showercalib->Fill(asymm_showercalib,energy_showercalib);
+    }
+
+    const float energy_blackhole = _mSimulation->blackhole_e_hit;
+    const float energy_truth = _mSimulation->truth_e;
+    const float energy_tower = energy_emcal_calib + energy_hcalout_calib;
+    const float ratio_truth = energy_blackhole/energy_truth;
+    const float ratio_tower = energy_blackhole/energy_tower;
+    h_mRatio_Truth->Fill(ratio_truth);
+    h_mRatio_Tower->Fill(ratio_tower);
   }
 
   cout << "." << flush;
@@ -992,6 +1011,7 @@ int Proto4Simulation::FinishAna()
   h_mAsymmEnergy_leveling->Write();
   h_mAsymmEnergy_showercalib->Write();
   h_mRatio_Truth->Write();
+  h_mRatio_Tower->Write();
 
   mFile_OutPut->Close();
 
