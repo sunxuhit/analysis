@@ -883,19 +883,26 @@ int Proto4Simulation::InitAna()
   }
   */
 
-  h_mAsymmEnergy = new TH2F("h_mAsymmEnergy","h_mAsymmEnergy",105,-1.05,1.05,2000,-1.05,198.95);
+  h_mAsymmEnergy = new TH2F("h_mAsymmEnergy","h_mAsymmEnergy",52,-1.04,1.04,1000,-1.05,198.95);
 
+
+  const int numofbin_asy = 52;
+  const float asy_start = -1.04;
+  const float asy_stop  = 1.04;
+  const int numofbin_e = 500;
+  const float e_start = -1.05;
+  const float e_stop  = 98.95;
   // balancing
-  h_mAsymmEnergy_balancing = new TH2F("h_mAsymmEnergy_balancing","h_mAsymmEnergy_balancing",105,-1.05,1.05,2000,-1.05,198.95);
+  h_mAsymmEnergy_balancing = new TH2F("h_mAsymmEnergy_balancing","h_mAsymmEnergy_balancing",numofbin_asy,asy_start,asy_stop,numofbin_e,e_start,e_stop);
 
   // leveling correction
-  h_mAsymmEnergy_leveling = new TH2F("h_mAsymmEnergy_leveling","h_mAsymmEnergy_leveling",105,-1.05,1.05,2000,-1.05,198.95);
+  h_mAsymmEnergy_leveling = new TH2F("h_mAsymmEnergy_leveling","h_mAsymmEnergy_leveling",numofbin_asy,asy_start,asy_stop,numofbin_e,e_start,e_stop);
 
   // shower correction
-  h_mAsymmEnergy_showercalib = new TH2F("h_mAsymmEnergy_showercalib","h_mAsymmEnergy_showercalib",105,-1.05,1.05,2000,-1.05,198.95);
+  h_mAsymmEnergy_showercalib = new TH2F("h_mAsymmEnergy_showercalib","h_mAsymmEnergy_showercalib",numofbin_asy,asy_start,asy_stop,numofbin_e,e_start,e_stop);
 
-  h_mRatio_Truth = new TH1F("h_mRatio_Truth", "h_mRatio_Truth", 1000, 0.0, 1.0);
-  h_mRatio_Tower = new TH1F("h_mRatio_Tower", "h_mRatio_Tower", 1000, 0.0, 1.0);
+  h_mRatio_Truth = new TH1F("h_mRatio_Truth", "h_mRatio_Truth", 100, 0.0, 1.0);
+  h_mRatio_Tower = new TH1F("h_mRatio_Tower", "h_mRatio_Tower", 100, 0.0, 1.0);
 
   return 0;
 }
@@ -907,8 +914,8 @@ int Proto4Simulation::MakeAna()
   // const float c_in_leveling[12] = {0.814269, 0.87434, 0.930247, 0.870155, 0.841073, 0.812163, 0.805016, 0.804375, 0.796104, 0.785911, 0.792748, 0.793076};
   // const float c_out_leveling[12] = {1.2955, 1.16784, 1.08106, 1.17539, 1.23298, 1.30086, 1.31963, 1.32136, 1.3443, 1.3744, 1.35398, 1.35302};
 
-  const float c_in_leveling[12]  = {1.19484, 1.19484, 1.19484, 1.19484, 1.16891, 1.08596, 0.999796, 0.951548, 0.939618, 0.934458, 0.928785, 0.928785};
-  const float c_out_leveling[12] = {0.859793, 0.859793, 0.859793, 0.859793, 0.873743, 0.926652, 1.0002, 1.05365, 1.06868, 1.07543, 1.08304, 1.08304};
+  const float c_in_leveling[12] = {1.32772, 1.20668, 1.22724, 1.18479, 1.11161, 1.04602, 0.977995, 0.939564, 0.94241, 0.93623, 0.936535, 0.935812};
+  const float c_out_leveling[12] = {0.802034, 0.853766, 0.843767, 0.865074, 0.908759, 0.957861, 1.02302, 1.06875, 1.06509, 1.07309, 1.07269, 1.07364};
 
   unsigned long start_event_use = _mStartEvent;
   unsigned long stop_event_use = _mStopEvent;
@@ -962,13 +969,13 @@ int Proto4Simulation::MakeAna()
 
     // 3 sigma MIP energy cut for Balancing Correction
     const double MIP_energy_cut = MIP_mean+3.0*MIP_width;
-    if(energy_emcal_calib > 0.01 && energy_hcalout_calib > 0.001 && energy_calib > MIP_energy_cut)
-    { 
+    if(energy_emcal_calib > 0.1 && energy_hcalout_calib > 0.1 && energy_calib > MIP_energy_cut) // 100 MeV minimum
+    {
       // balancing without muon
       h_mAsymmEnergy_balancing->Fill(asymm_calib,energy_calib);
     }
 
-    if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001 && energy_calib > MIP_energy_cut)
+    if(energy_emcal_calib > 0.1 && energy_hcalout_calib > 0.1)
     {
       // apply leveling
       const float energy_leveling = c_in*energy_emcal_calib + c_out*energy_hcalout_calib;
@@ -976,7 +983,7 @@ int Proto4Simulation::MakeAna()
       h_mAsymmEnergy_leveling->Fill(asymm_leveling,energy_leveling);
     }
 
-    if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001 && energy_calib > MIP_energy_cut)
+    if(energy_emcal_calib > 0.1 && energy_hcalout_calib > 0.1)
     {
       // apply shower calibration
       const float energy_showercalib = showercalib*c_in*energy_emcal_calib + showercalib*c_out*energy_hcalout_calib;

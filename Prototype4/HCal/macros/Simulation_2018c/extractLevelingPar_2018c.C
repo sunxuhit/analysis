@@ -18,7 +18,7 @@ void extractLevelingPar_2018c()
   TProfile *p_mAsymmEnergy_pion[12];
   TFile *File_InPut[12];
 
-  for(int i_energy = 3; i_energy < 11; ++i_energy)
+  for(int i_energy = 0; i_energy < 12; ++i_energy)
   {
     
     string inputfile = Form("/gpfs/mnt/gpfs02/sphenix/user/xusun/Simulation/ShowerCalibAna/Proto4Simulation_2018c_pion_%dGeV.root",mEnergy[i_energy]);
@@ -28,15 +28,15 @@ void extractLevelingPar_2018c()
     momentum[i_energy] = (float)mEnergy[i_energy];
   }
 
-  float fit_start = -0.8;
-  float fit_stop  = 0.8;
+  float fit_start = -0.7;
+  float fit_stop  = 0.7;
   float c_in[12];
   float c_out[12];
   TF1 *f_pol[12];
 
   TCanvas *c_AsymmEnergy = new TCanvas("c_AsymmEnergy","c_AsymmEnergy",2000,1500);
   c_AsymmEnergy->Divide(4,3);
-  for(int i_pad = 3; i_pad < 11; ++i_pad)
+  for(int i_pad = 0; i_pad < 12; ++i_pad)
   {
     c_AsymmEnergy->cd(i_pad+1);
     c_AsymmEnergy->cd(i_pad+1)->SetLeftMargin(0.15);
@@ -49,7 +49,7 @@ void extractLevelingPar_2018c()
     h_mAsymmEnergy_pion[i_pad]->GetXaxis()->CenterTitle();
     h_mAsymmEnergy_pion[i_pad]->GetYaxis()->SetTitle("Total Energy (GeV)");
     h_mAsymmEnergy_pion[i_pad]->GetYaxis()->CenterTitle();
-    h_mAsymmEnergy_pion[i_pad]->GetYaxis()->SetRangeUser(0.0,momentum[i_pad]);
+    h_mAsymmEnergy_pion[i_pad]->GetYaxis()->SetRangeUser(0.0,2.0*momentum[i_pad]);
     h_mAsymmEnergy_pion[i_pad]->Draw("colz");
     p_mAsymmEnergy_pion[i_pad]->SetMarkerSize(1.1);
     p_mAsymmEnergy_pion[i_pad]->SetMarkerColor(1);
@@ -80,7 +80,7 @@ void extractLevelingPar_2018c()
   c_AsymmEnergy->SaveAs("./figures/c_EnergyBalancing_2018c.eps");
 
   ofstream File_OutPut("leveling_corr.txt");
-  for(int i_energy = 3; i_energy < 11; ++i_energy)
+  for(int i_energy = 0; i_energy < 12; ++i_energy)
   {
     cout << momentum[i_energy] << " GeV: c_in = " << c_in[i_energy] << ", c_out = " << c_out[i_energy] << endl;
     File_OutPut << momentum[i_energy] << " GeV: c_in = " << c_in[i_energy] << ", c_out = " << c_out[i_energy] << endl;

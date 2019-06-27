@@ -2,20 +2,20 @@
 
 date
 
-# echo  run shower calibration for 3 GeV
-# root -l -b -q  Simulation_ShowerCalibAna_2018c.C\(-1,3\)
-# echo finish 3 GeV shower calibration
-# sleep 2
+echo  run shower calibration for 3 GeV
+root -l -b -q  Simulation_ShowerCalibAna_2018c.C\(-1,3\)
+echo finish 3 GeV shower calibration
+sleep 2
 
-# echo  run shower calibration for 4 GeV
-# root -l -b -q  Simulation_ShowerCalibAna_2018c.C\(-1,4\)
-# echo finish 4 GeV shower calibration
-# sleep 2
+echo  run shower calibration for 4 GeV
+root -l -b -q  Simulation_ShowerCalibAna_2018c.C\(-1,4\)
+echo finish 4 GeV shower calibration
+sleep 2
 
-# echo  run shower calibration for 5 GeV
-# root -l -b -q  Simulation_ShowerCalibAna_2018c.C\(-1,5\)
-# echo finish 5 GeV shower calibration
-# sleep 2
+echo  run shower calibration for 5 GeV
+root -l -b -q  Simulation_ShowerCalibAna_2018c.C\(-1,5\)
+echo finish 5 GeV shower calibration
+sleep 2
 
 echo  run shower calibration for 6 GeV
 root -l -b -q  Simulation_ShowerCalibAna_2018c.C\(-1,6\)
@@ -57,6 +57,6 @@ root -l -b -q  Simulation_ShowerCalibAna_2018c.C\(-1,40\)
 echo finish 40 GeV shower calibration
 sleep 2
 
-# echo  run shower calibration for 50 GeV
-# root -l -b -q  Simulation_ShowerCalibAna_2018c.C\(-1,50\)
-# echo finish 50 GeV shower calibration
+echo  run shower calibration for 50 GeV
+root -l -b -q  Simulation_ShowerCalibAna_2018c.C\(-1,50\)
+echo finish 50 GeV shower calibration

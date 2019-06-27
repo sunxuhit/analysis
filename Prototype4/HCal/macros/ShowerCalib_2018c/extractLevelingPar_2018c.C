@@ -30,8 +30,8 @@ void extractLevelingPar_2018c()
     momentum[i_energy] = TMath::Abs(h_mMomentum[i_energy]->GetMean());
   }
 
-  float fit_start = -0.8;
-  float fit_stop  = 0.8;
+  float fit_start = -0.7;
+  float fit_stop  = 0.7;
   float c_in[12];
   float c_out[12];
   TF1 *f_pol[12];

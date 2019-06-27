@@ -25,7 +25,7 @@ void extractShowerCalibFactor_2018c()
   TLegend *leg[12];
   float showercalib[12];
 
-  for(int i_energy = 3; i_energy < 11; ++i_energy)
+  for(int i_energy = 0; i_energy < 12; ++i_energy)
   {
     string inputfile = Form("/gpfs/mnt/gpfs02/sphenix/user/xusun/Simulation/ShowerCalibAna/Proto4Simulation_2018c_pion_%dGeV.root",mEnergy[i_energy]);
     File_InPut[i_energy] = TFile::Open(inputfile.c_str());
@@ -40,7 +40,7 @@ void extractShowerCalibFactor_2018c()
 
   TCanvas *c_Energy = new TCanvas("c_Energy","c_Energy",2000,1500);
   c_Energy->Divide(4,3);
-  for(int i_pad = 3; i_pad < 11; ++i_pad)
+  for(int i_pad = 0; i_pad < 12; ++i_pad)
   {
     c_Energy->cd(i_pad+1);
     c_Energy->cd(i_pad+1)->SetLeftMargin(0.15);
@@ -109,7 +109,7 @@ void extractShowerCalibFactor_2018c()
 
 
   ofstream File_OutPut("showercalib.txt");
-  for(int i_energy = 3; i_energy < 11; ++i_energy)
+  for(int i_energy = 0; i_energy < 12; ++i_energy)
   {
     cout << momentum[i_energy] << " GeV: showercalib = " << showercalib[i_energy] << endl;
     File_OutPut << momentum[i_energy] << " GeV: showercalib = " << showercalib[i_energy] << endl;

@@ -282,7 +282,9 @@ class Proto4ShowerCalib : public SubsysReco
   const double MIP_mean  = 0.65;
   const double MIP_width = 0.16;
 
-  const double showercalib = 2.53637; // extracted with 16 GeV Test Beam Data
+  // const double showercalib = 2.53637; // extracted with 16 GeV Test Beam Data
+  // const double showercalib = 2.57864; // extracted with 16 GeV Test Beam Data
+  const double showercalib = 2.58; // extracted with 16 GeV Test Beam Data
 
   std::map<float,int> map_momIndex; // mom vs index
 

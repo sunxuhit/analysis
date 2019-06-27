@@ -39,7 +39,7 @@ void extractEnergyReco_Pion_2018c()
   TF1 *f_gaus[12];
   TLegend *leg[12];
 
-  for(int i_energy = 3; i_energy < 11; ++i_energy)
+  for(int i_energy = 0; i_energy < 12; ++i_energy)
   {
     string inputfile = Form("/gpfs/mnt/gpfs02/sphenix/user/xusun/Simulation/ShowerCalibAna/Proto4Simulation_2018c_pion_%dGeV.root",mEnergy[i_energy]);
     File_InPut[i_energy] = TFile::Open(inputfile.c_str());
@@ -61,7 +61,7 @@ void extractEnergyReco_Pion_2018c()
 
   TCanvas *c_Energy = new TCanvas("c_Energy","c_Energy",2000,1500);
   c_Energy->Divide(4,3);
-  for(int i_pad = 3; i_pad < 11; ++i_pad)
+  for(int i_pad = 0; i_pad < 12; ++i_pad)
   {
     c_Energy->cd(i_pad+1);
     c_Energy->cd(i_pad+1)->SetLeftMargin(0.15);
@@ -134,7 +134,7 @@ void extractEnergyReco_Pion_2018c()
 
   TGraphAsymmErrors *g_linearity = new TGraphAsymmErrors();
   TGraphAsymmErrors *g_resolution = new TGraphAsymmErrors();
-  for(int i_point = 3; i_point < 11; ++i_point)
+  for(int i_point = 0; i_point < 12; ++i_point)
   {
     g_linearity->SetPoint(i_point,momentum[i_point],val_mean[i_point]);
     g_linearity->SetPointError(i_point,0.0,0.0,err_mean[i_point],err_mean[i_point]);

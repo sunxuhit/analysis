@@ -25,7 +25,7 @@ void plotQA_EnergySpec_2018c()
 
   TLegend *leg[12];
 
-  for(int i_energy = 3; i_energy < 11; ++i_energy) // read in data
+  for(int i_energy = 0; i_energy < 12; ++i_energy) // read in data
   {
     string inputfile = Form("/gpfs/mnt/gpfs02/sphenix/user/xusun/TestBeam/ShowerCalibAna_2018c/Proto4ShowerCalib_%dGeV_2018c.root",mEnergy[i_energy]);
     File_InPut_data[i_energy] = TFile::Open(inputfile.c_str());
@@ -35,7 +35,7 @@ void plotQA_EnergySpec_2018c()
   }
 
 
-  for(int i_energy = 3; i_energy < 11; ++i_energy) // read in simulation 
+  for(int i_energy = 0; i_energy < 12; ++i_energy) // read in simulation 
   {
     string inputfile = Form("/gpfs/mnt/gpfs02/sphenix/user/xusun/Simulation/ShowerCalibAna/Proto4Simulation_2018c_pion_%dGeV.root",mEnergy[i_energy]);
     File_InPut_sim[i_energy] = TFile::Open(inputfile.c_str());
@@ -47,7 +47,7 @@ void plotQA_EnergySpec_2018c()
 
   TCanvas *c_Energy = new TCanvas("c_Energy","c_Energy",2000,1500);
   c_Energy->Divide(4,3);
-  for(int i_pad = 3; i_pad < 11; ++i_pad)
+  for(int i_pad = 0; i_pad < 12; ++i_pad)
   {
     c_Energy->cd(i_pad+1);
     c_Energy->cd(i_pad+1)->SetLeftMargin(0.15);

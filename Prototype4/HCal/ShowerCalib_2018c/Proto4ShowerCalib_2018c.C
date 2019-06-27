@@ -774,20 +774,26 @@ int Proto4ShowerCalib::InitAna()
     h_mAsymmEnergy_electron = new TH2F("h_mAsymmEnergy_electron","h_mAsymmEnergy_electron",105,-1.05,1.05,2000,-1.05,198.95);
     h_mAsymmEnergy_pion = new TH2F("h_mAsymmEnergy_pion","h_mAsymmEnergy_pion",105,-1.05,1.05,2000,-1.05,198.95);
 
+    const int numofbin_asy = 52;
+    const float asy_start = -1.04;
+    const float asy_stop  = 1.04;
+    const int numofbin_e = 500;
+    const float e_start = -1.05;
+    const float e_stop  = 98.95;
     // balancing
-    h_mAsymmEnergy_balancing = new TH2F("h_mAsymmEnergy_balancing","h_mAsymmEnergy_balancing",105,-1.05,1.05,2000,-1.05,198.95);
-    h_mAsymmEnergy_electron_balancing = new TH2F("h_mAsymmEnergy_electron_balancing","h_mAsymmEnergy_electron_balancing",105,-1.05,1.05,2000,-1.05,198.95);
-    h_mAsymmEnergy_pion_balancing = new TH2F("h_mAsymmEnergy_pion_balancing","h_mAsymmEnergy_pion_balancing",105,-1.05,1.05,2000,-1.05,198.95);
+    h_mAsymmEnergy_balancing = new TH2F("h_mAsymmEnergy_balancing","h_mAsymmEnergy_balancing",numofbin_asy,asy_start,asy_stop,numofbin_e,e_start,e_stop);
+    h_mAsymmEnergy_electron_balancing = new TH2F("h_mAsymmEnergy_electron_balancing","h_mAsymmEnergy_electron_balancing",numofbin_asy,asy_start,asy_stop,numofbin_e,e_start,e_stop);
+    h_mAsymmEnergy_pion_balancing = new TH2F("h_mAsymmEnergy_pion_balancing","h_mAsymmEnergy_pion_balancing",numofbin_asy,asy_start,asy_stop,numofbin_e,e_start,e_stop);
 
     // leveling correction
-    h_mAsymmEnergy_leveling = new TH2F("h_mAsymmEnergy_leveling","h_mAsymmEnergy_leveling",105,-1.05,1.05,2000,-1.05,198.95);
-    h_mAsymmEnergy_electron_leveling = new TH2F("h_mAsymmEnergy_electron_leveling","h_mAsymmEnergy_electron_leveling",105,-1.05,1.05,2000,-1.05,198.95);
-    h_mAsymmEnergy_pion_leveling = new TH2F("h_mAsymmEnergy_pion_leveling","h_mAsymmEnergy_pion_leveling",105,-1.05,1.05,2000,-1.05,198.95);
+    h_mAsymmEnergy_leveling = new TH2F("h_mAsymmEnergy_leveling","h_mAsymmEnergy_leveling",numofbin_asy,asy_start,asy_stop,numofbin_e,e_start,e_stop);
+    h_mAsymmEnergy_electron_leveling = new TH2F("h_mAsymmEnergy_electron_leveling","h_mAsymmEnergy_electron_leveling",numofbin_asy,asy_start,asy_stop,numofbin_e,e_start,e_stop);
+    h_mAsymmEnergy_pion_leveling = new TH2F("h_mAsymmEnergy_pion_leveling","h_mAsymmEnergy_pion_leveling",numofbin_asy,asy_start,asy_stop,numofbin_e,e_start,e_stop);
 
     // shower correction
-    h_mAsymmEnergy_showercalib = new TH2F("h_mAsymmEnergy_showercalib","h_mAsymmEnergy_showercalib",105,-1.05,1.05,2000,-1.05,198.95);
-    h_mAsymmEnergy_electron_showercalib = new TH2F("h_mAsymmEnergy_electron_showercalib","h_mAsymmEnergy_electron_showercalib",105,-1.05,1.05,2000,-1.05,198.95);
-    h_mAsymmEnergy_pion_showercalib = new TH2F("h_mAsymmEnergy_pion_showercalib","h_mAsymmEnergy_pion_showercalib",105,-1.05,1.05,2000,-1.05,198.95);
+    h_mAsymmEnergy_showercalib = new TH2F("h_mAsymmEnergy_showercalib","h_mAsymmEnergy_showercalib",numofbin_asy,asy_start,asy_stop,numofbin_e,e_start,e_stop);
+    h_mAsymmEnergy_electron_showercalib = new TH2F("h_mAsymmEnergy_electron_showercalib","h_mAsymmEnergy_electron_showercalib",numofbin_asy,asy_start,asy_stop,numofbin_e,e_start,e_stop);
+    h_mAsymmEnergy_pion_showercalib = new TH2F("h_mAsymmEnergy_pion_showercalib","h_mAsymmEnergy_pion_showercalib",numofbin_asy,asy_start,asy_stop,numofbin_e,e_start,e_stop);
 
     // Outer HCal only study
     h_mAsymmEnergy_MIP = new TH2F("h_mAsymmEnergy_MIP","h_mAsymmEnergy_MIP",105,-1.05,1.05,2000,-1.05,198.95);
@@ -821,8 +827,8 @@ int Proto4ShowerCalib::MakeAna()
   // const float c_in_leveling[12] = {0.797772, 1.0791, 0.880801, 0.911312, 0.786898, 0.82447, 0.797038, 0.807286, 0.790069, 0.783492, 0.790613, 0.793504};
   // const float c_out_leveling[12] = {1.33957, 0.931703, 1.15651, 1.10781, 1.37139, 1.27049, 1.34164, 1.31357, 1.36186, 1.38186, 1.36025, 1.35178}; 
 
-  const float c_in_leveling[12] = {0.814269, 0.87434, 0.930247, 0.870155, 0.841073, 0.812163, 0.805016, 0.804375, 0.796104, 0.785911, 0.792748, 0.793076};
-  const float c_out_leveling[12] = {1.2955, 1.16784, 1.08106, 1.17539, 1.23298, 1.30086, 1.31963, 1.32136, 1.3443, 1.3744, 1.35398, 1.35302};
+  const float c_in_leveling[12] = {0.795342, 0.881952, 0.823542, 0.877993, 0.851911, 0.81684, 0.810271, 0.807232, 0.799082, 0.786842, 0.793084, 0.789911};
+  const float c_out_leveling[12] = {1.34647, 1.15453, 1.2727, 1.16139, 1.21041, 1.28904, 1.30575, 1.31372, 1.33589, 1.37156, 1.353, 1.36233};
 
   unsigned long start_event_use = _mStartEvent;
   unsigned long stop_event_use = _mStopEvent;
@@ -887,7 +893,7 @@ int Proto4ShowerCalib::MakeAna()
 
       // 3 sigma MIP energy cut for Balancing Correction
       const double MIP_energy_cut = MIP_mean+3.0*MIP_width;
-      if(energy_emcal_calib > 0.01 && energy_hcalout_calib > 0.001 && energy_calib > MIP_energy_cut)
+      if(energy_emcal_calib > 0.1 && energy_hcalout_calib > 0.1 && energy_calib > MIP_energy_cut)
       { 
 	// balancing without muon
 	h_mAsymmEnergy_balancing->Fill(asymm_calib,energy_calib);
@@ -895,7 +901,7 @@ int Proto4ShowerCalib::MakeAna()
 	if(good_pion) h_mAsymmEnergy_pion_balancing->Fill(asymm_calib,energy_calib);
       }
 
-      if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001 && energy_calib > MIP_energy_cut)
+      if(energy_emcal_calib > 0.1 && energy_hcalout_calib > 0.1)
       {
 	// apply leveling
 	const float energy_leveling = c_in*energy_emcal_calib + c_out*energy_hcalout_calib;
@@ -905,7 +911,8 @@ int Proto4ShowerCalib::MakeAna()
 	if(good_pion) h_mAsymmEnergy_pion_leveling->Fill(asymm_leveling,energy_leveling);
       }
 
-      if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001 && energy_calib > MIP_energy_cut)
+      // if(energy_emcal_calib > 0.001 && energy_hcalout_calib > 0.001 && energy_calib > MIP_energy_cut)
+      if(energy_emcal_calib > 0.1 && energy_hcalout_calib > 0.1)
       {
 	// apply shower calibration
 	const float energy_showercalib = showercalib*c_in*energy_emcal_calib + showercalib*c_out*energy_hcalout_calib;

@@ -1,1 +1,1 @@
-default MIP at 12 GeV is: 0.646613 +/- 0.165525
+default MIP at 12 GeV is: 0.654677 +/- 0.16485
