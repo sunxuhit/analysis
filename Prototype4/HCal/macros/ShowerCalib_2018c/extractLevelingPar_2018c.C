@@ -51,7 +51,7 @@ void extractLevelingPar_2018c()
     h_mAsymmEnergy_pion[i_pad]->GetXaxis()->CenterTitle();
     h_mAsymmEnergy_pion[i_pad]->GetYaxis()->SetTitle("Total Energy (GeV)");
     h_mAsymmEnergy_pion[i_pad]->GetYaxis()->CenterTitle();
-    h_mAsymmEnergy_pion[i_pad]->GetYaxis()->SetRangeUser(0.0,momentum[i_pad]);
+    h_mAsymmEnergy_pion[i_pad]->GetYaxis()->SetRangeUser(0.0,2.0*momentum[i_pad]);
     h_mAsymmEnergy_pion[i_pad]->Draw("colz");
     p_mAsymmEnergy_pion[i_pad]->SetMarkerSize(1.1);
     p_mAsymmEnergy_pion[i_pad]->SetMarkerColor(1);

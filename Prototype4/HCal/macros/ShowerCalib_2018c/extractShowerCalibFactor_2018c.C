@@ -34,7 +34,7 @@ void extractShowerCalibFactor_2018c()
     h_mMomentum[i_energy] = (TH1F*)File_InPut[i_energy]->Get("h_mMomentum");
     momentum[i_energy] = TMath::Abs(h_mMomentum[i_energy]->GetMean());
 
-    h_mAsymmEnergy_balancing[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_pion");
+    h_mAsymmEnergy_balancing[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_pion_balancing");
     h_mEnergy_balancing[i_energy] = (TH1F*)h_mAsymmEnergy_balancing[i_energy]->ProjectionY()->Clone("h_mEnergy_balancing");
 
     h_mAsymmEnergy_leveling[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_pion_leveling");

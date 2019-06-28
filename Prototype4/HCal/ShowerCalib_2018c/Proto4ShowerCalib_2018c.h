@@ -284,7 +284,7 @@ class Proto4ShowerCalib : public SubsysReco
 
   // const double showercalib = 2.53637; // extracted with 16 GeV Test Beam Data
   // const double showercalib = 2.57864; // extracted with 16 GeV Test Beam Data
-  const double showercalib = 2.58; // extracted with 16 GeV Test Beam Data
+  const double showercalib = 2.67; // extracted with 16 GeV Test Beam Data
 
   std::map<float,int> map_momIndex; // mom vs index
 

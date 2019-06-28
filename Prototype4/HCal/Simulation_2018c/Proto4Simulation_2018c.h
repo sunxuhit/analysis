@@ -185,12 +185,13 @@ class Proto4Simulation : public SubsysReco
   TH2F *h_mAsymmEnergy_showercalib;
 
   TH1F *h_mRatio_Truth;
+  TH1F *h_mRatio_Ana;
   TH1F *h_mRatio_Tower;
 
   const double MIP_mean  = 0.65;
   const double MIP_width = 0.16;
   // const double showercalib = 1.59349; // extracted with 16 GeV Test Beam Data
-  const double showercalib = 1.59; // extracted with 16 GeV Test Beam Data
+  const double showercalib = 1.63; // extracted with 16 GeV Test Beam Data
 };
 
 #endif  // __Proto4Simulation_H__

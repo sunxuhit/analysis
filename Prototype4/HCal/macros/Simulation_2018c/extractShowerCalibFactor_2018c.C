@@ -31,7 +31,7 @@ void extractShowerCalibFactor_2018c()
     File_InPut[i_energy] = TFile::Open(inputfile.c_str());
     momentum[i_energy] = (float)mEnergy[i_energy];
 
-    h_mAsymmEnergy_balancing[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy");
+    h_mAsymmEnergy_balancing[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_balancing");
     h_mEnergy_balancing[i_energy] = (TH1F*)h_mAsymmEnergy_balancing[i_energy]->ProjectionY()->Clone("h_mEnergy_balancing");
 
     h_mAsymmEnergy_leveling[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_leveling");

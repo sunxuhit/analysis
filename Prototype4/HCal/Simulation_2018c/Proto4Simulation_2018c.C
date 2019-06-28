@@ -902,6 +902,7 @@ int Proto4Simulation::InitAna()
   h_mAsymmEnergy_showercalib = new TH2F("h_mAsymmEnergy_showercalib","h_mAsymmEnergy_showercalib",numofbin_asy,asy_start,asy_stop,numofbin_e,e_start,e_stop);
 
   h_mRatio_Truth = new TH1F("h_mRatio_Truth", "h_mRatio_Truth", 100, 0.0, 1.0);
+  h_mRatio_Ana   = new TH1F("h_mRatio_Ana", "h_mRatio_Ana", 100, 0.0, 1.0);
   h_mRatio_Tower = new TH1F("h_mRatio_Tower", "h_mRatio_Tower", 100, 0.0, 1.0);
 
   return 0;
@@ -995,8 +996,10 @@ int Proto4Simulation::MakeAna()
     const float energy_truth = _mSimulation->truth_e;
     const float energy_tower = energy_emcal_calib + energy_hcalout_calib;
     const float ratio_truth = energy_blackhole/energy_truth;
+    const float ratio_ana   = energy_blackhole/_mMom;
     const float ratio_tower = energy_blackhole/energy_tower;
     h_mRatio_Truth->Fill(ratio_truth);
+    h_mRatio_Ana->Fill(ratio_ana);
     h_mRatio_Tower->Fill(ratio_tower);
   }
 
@@ -1018,6 +1021,7 @@ int Proto4Simulation::FinishAna()
   h_mAsymmEnergy_leveling->Write();
   h_mAsymmEnergy_showercalib->Write();
   h_mRatio_Truth->Write();
+  h_mRatio_Ana->Write();
   h_mRatio_Tower->Write();
 
   mFile_OutPut->Close();

@@ -21,7 +21,7 @@ void plotQA_EnergyLeakage_2018c()
 
   TLegend *leg[12];
 
-  for(int i_energy = 3; i_energy < 11; ++i_energy) // read in simulation 
+  for(int i_energy = 0; i_energy < 12; ++i_energy) // read in simulation 
   {
     string inputfile = Form("/gpfs/mnt/gpfs02/sphenix/user/xusun/Simulation/ShowerCalibAna/Proto4Simulation_2018c_pion_%dGeV.root",mEnergy[i_energy]);
     File_InPut[i_energy] = TFile::Open(inputfile.c_str());
@@ -33,7 +33,7 @@ void plotQA_EnergyLeakage_2018c()
 
   TCanvas *c_Energy = new TCanvas("c_Energy","c_Energy",2000,1500);
   c_Energy->Divide(4,3);
-  for(int i_pad = 3; i_pad < 11; ++i_pad)
+  for(int i_pad = 0; i_pad < 12; ++i_pad)
   {
     c_Energy->cd(i_pad+1);
     c_Energy->cd(i_pad+1)->SetLeftMargin(0.15);
@@ -50,7 +50,7 @@ void plotQA_EnergyLeakage_2018c()
     h_mRatio_Tower[i_pad]->GetXaxis()->SetRangeUser(0.0,1.0);
     h_mRatio_Tower[i_pad]->GetYaxis()->SetTitle();
     h_mRatio_Tower[i_pad]->GetYaxis()->CenterTitle();
-    h_mRatio_Tower[i_pad]->GetYaxis()->SetRangeUser(0.0,1.2*h_mRatio_Tower[i_pad]->GetMaximum());
+    h_mRatio_Tower[i_pad]->GetYaxis()->SetRangeUser(0.0,1.2*h_mRatio_Truth[i_pad]->GetMaximum());
     h_mRatio_Tower[i_pad]->SetMarkerColor(1);
     h_mRatio_Tower[i_pad]->SetMarkerStyle(20);
     h_mRatio_Tower[i_pad]->SetMarkerSize(1.2);
