@@ -25,11 +25,12 @@ float ErrDiv(float x, float y, float dx, float dy)
     return x/y*ErrorAdd(dx/x,dy/y);
 }
 
-void extractEnergyReco_Pion_2018c()
+void extractEnergyReco_Electron_2018c()
 {
   int mEnergy[12] = {3,4,5,6,8,12,16,20,24,28,40,50};
   float momentum[12];
 
+  TH1F *h_mMomentum[12];
   TH2F *h_mAsymmEnergy_leveling[12];
   TH1F *h_mEnergy_leveling[12];
   TH2F *h_mAsymmEnergy_showercalib[12];
@@ -41,14 +42,15 @@ void extractEnergyReco_Pion_2018c()
 
   for(int i_energy = 0; i_energy < 12; ++i_energy)
   {
-    string inputfile = Form("/gpfs/mnt/gpfs02/sphenix/user/xusun/Simulation/ShowerCalibAna/Proto4Simulation_2018c_pion_%dGeV.root",mEnergy[i_energy]);
+    string inputfile = Form("/gpfs/mnt/gpfs02/sphenix/user/xusun/TestBeam/ShowerCalibAna_2018c/Proto4ShowerCalib_%dGeV_2018c.root",mEnergy[i_energy]);
     File_InPut[i_energy] = TFile::Open(inputfile.c_str());
-    momentum[i_energy] = (float)mEnergy[i_energy];
+    h_mMomentum[i_energy] = (TH1F*)File_InPut[i_energy]->Get("h_mMomentum");
+    momentum[i_energy] = TMath::Abs(h_mMomentum[i_energy]->GetMean());
 
-    h_mAsymmEnergy_leveling[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_leveling");
+    h_mAsymmEnergy_leveling[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_electron_leveling");
     h_mEnergy_leveling[i_energy] = (TH1F*)h_mAsymmEnergy_leveling[i_energy]->ProjectionY()->Clone("h_mEnergy_leveling");
 
-    h_mAsymmEnergy_showercalib[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_showercalib");
+    h_mAsymmEnergy_showercalib[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_electron_showercalib");
     h_mEnergy_showercalib[i_energy] = (TH1F*)h_mAsymmEnergy_showercalib[i_energy]->ProjectionY()->Clone("h_mEnergy_showercalib");
   }
 
@@ -130,7 +132,7 @@ void extractEnergyReco_Pion_2018c()
     val_resolution[i_pad] = val_sigma[i_pad]/val_mean[i_pad];
     err_resolution[i_pad] = ErrDiv(val_sigma[i_pad],val_mean[i_pad],err_sigma[i_pad],err_mean[i_pad]);
   }
-  c_Energy->SaveAs("./figures/c_EnergyShowerCalib_2018c.eps");
+  c_Energy->SaveAs("../figures/HCAL_ShowerCalib_2018c/c_EnergyShowerCalib_electron_2018c.eps");
 
   TGraphAsymmErrors *g_linearity = new TGraphAsymmErrors();
   TGraphAsymmErrors *g_resolution = new TGraphAsymmErrors();
@@ -143,12 +145,22 @@ void extractEnergyReco_Pion_2018c()
     g_resolution->SetPointError(i_point,0.0,0.0,err_resolution[i_point],err_resolution[i_point]);
   }
 
-  string outputfile = "/sphenix/user/xusun/Simulation/ShowerCalibAna/Simulation_2018c_pion.root";
+  string outputfile = "/sphenix/user/xusun/TestBeam/ShowerCalibAna_2018c/T1044_2018c_electron.root";
   TFile *File_OutPut = new TFile(outputfile.c_str(),"RECREATE");
   File_OutPut->cd();
-  g_linearity->SetName("g_linearity_2018c_pion");
+  g_linearity->SetName("g_linearity_2018c_electron");
   g_linearity->Write();
-  g_resolution->SetName("g_resolution_2018c_pion");
+  g_resolution->SetName("g_resolution_2018c_electron");
   g_resolution->Write();
   File_OutPut->Close();
+
+  /*
+  ofstream File_OutPut("showercalib.txt");
+  for(int i_energy = 0; i_energy < 12; ++i_energy)
+  {
+    cout << momentum[i_energy] << " GeV: showercalib = " << showercalib[i_energy] << endl;
+    File_OutPut << momentum[i_energy] << " GeV: showercalib = " << showercalib[i_energy] << endl;
+  }
+  File_OutPut.close();
+  */
 }

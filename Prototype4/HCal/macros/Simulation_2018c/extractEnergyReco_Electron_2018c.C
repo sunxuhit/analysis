@@ -25,7 +25,7 @@ float ErrDiv(float x, float y, float dx, float dy)
     return x/y*ErrorAdd(dx/x,dy/y);
 }
 
-void extractEnergyReco_Pion_2018c()
+void extractEnergyReco_Electron_2018c()
 {
   int mEnergy[12] = {3,4,5,6,8,12,16,20,24,28,40,50};
   float momentum[12];
@@ -41,7 +41,7 @@ void extractEnergyReco_Pion_2018c()
 
   for(int i_energy = 0; i_energy < 12; ++i_energy)
   {
-    string inputfile = Form("/gpfs/mnt/gpfs02/sphenix/user/xusun/Simulation/ShowerCalibAna/Proto4Simulation_2018c_pion_%dGeV.root",mEnergy[i_energy]);
+    string inputfile = Form("/gpfs/mnt/gpfs02/sphenix/user/xusun/Simulation/ShowerCalibAna/Proto4Simulation_2018c_electron_%dGeV.root",mEnergy[i_energy]);
     File_InPut[i_energy] = TFile::Open(inputfile.c_str());
     momentum[i_energy] = (float)mEnergy[i_energy];
 
@@ -143,12 +143,12 @@ void extractEnergyReco_Pion_2018c()
     g_resolution->SetPointError(i_point,0.0,0.0,err_resolution[i_point],err_resolution[i_point]);
   }
 
-  string outputfile = "/sphenix/user/xusun/Simulation/ShowerCalibAna/Simulation_2018c_pion.root";
+  string outputfile = "/sphenix/user/xusun/Simulation/ShowerCalibAna/Simulation_2018c_electron.root";
   TFile *File_OutPut = new TFile(outputfile.c_str(),"RECREATE");
   File_OutPut->cd();
-  g_linearity->SetName("g_linearity_2018c_pion");
+  g_linearity->SetName("g_linearity_2018c_electron");
   g_linearity->Write();
-  g_resolution->SetName("g_resolution_2018c_pion");
+  g_resolution->SetName("g_resolution_2018c_electron");
   g_resolution->Write();
   File_OutPut->Close();
 }

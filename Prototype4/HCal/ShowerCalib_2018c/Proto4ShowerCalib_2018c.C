@@ -918,7 +918,7 @@ int Proto4ShowerCalib::MakeAna()
 	const float energy_showercalib = showercalib*c_in*energy_emcal_calib + showercalib*c_out*energy_hcalout_calib;
 	const float asymm_showercalib = (showercalib*c_in*energy_emcal_calib - showercalib*c_out*energy_hcalout_calib)/energy_showercalib;
 	h_mAsymmEnergy_showercalib->Fill(asymm_showercalib,energy_showercalib);
-	if(good_electron) h_mAsymmEnergy_showercalib->Fill(asymm_showercalib,energy_showercalib);
+	if(good_electron) h_mAsymmEnergy_electron_showercalib->Fill(asymm_showercalib,energy_showercalib);
 	if(good_pion) h_mAsymmEnergy_pion_showercalib->Fill(asymm_showercalib,energy_showercalib);
       }
 

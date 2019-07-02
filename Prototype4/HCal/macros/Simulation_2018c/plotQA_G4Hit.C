@@ -6,7 +6,9 @@
 
 void plotQA_G4Hit(int beam_mom = 24)
 {
-  string inputfile = Form("/sphenix/user/xusun/Simulation/ShowerCalib/Proto4Simulation_2018c_pion_%dGeV.root",beam_mom);
+  string pid = "pion";
+  // string pid = "electron";
+  string inputfile = Form("/sphenix/user/xusun/Simulation/ShowerCalib/Proto4Simulation_2018c_%s_%dGeV.root",pid.c_str(),beam_mom);
   TFile *File_InPut = TFile::Open(inputfile.c_str());
 
   // G4Hit for EMCal => xy & xz & energy
@@ -65,7 +67,7 @@ void plotQA_G4Hit(int beam_mom = 24)
   h_mG4AbsXY_CEMC->Draw("col same");
   h_mG4HitXY_BLACKHOLE->Draw("col same");
 
-  string FigName = Form("../figures/HCAL_Simulation_2018c/c_G4Hit_XY_%dGeV.gif",beam_mom);
+  string FigName = Form("../figures/HCAL_Simulation_2018c/c_G4Hit_XY_%s_%dGeV.gif",pid.c_str(),beam_mom);
   c_G4Hit_XY->SaveAs(FigName.c_str());
 
   TCanvas *c_G4Hit_XZ = new TCanvas("c_G4Hit_XZ","c_G4Hit_XZ",10,10,800,800);
@@ -88,7 +90,7 @@ void plotQA_G4Hit(int beam_mom = 24)
   h_mG4AbsXZ_CEMC->Draw("col same");
   h_mG4HitXZ_BLACKHOLE->Draw("col same");
 
-  FigName = Form("../figures/HCAL_Simulation_2018c/c_G4Hit_XZ_%dGeV.gif",beam_mom);
+  FigName = Form("../figures/HCAL_Simulation_2018c/c_G4Hit_XZ_%s_%dGeV.gif",pid.c_str(),beam_mom);
   c_G4Hit_XZ->SaveAs(FigName.c_str());
 
   TCanvas *c_G4Energy = new TCanvas("c_G4Energy","c_G4Energy",10,10,1000,500);
@@ -145,6 +147,6 @@ void plotQA_G4Hit(int beam_mom = 24)
   h_mG4Energy->GetYaxis()->SetRangeUser(beam_mom*0.75,beam_mom*1.1);
   h_mG4Energy->Draw("colz");
 
-  FigName = Form("../figures/HCAL_Simulation_2018c/c_G4Energy_%dGeV.gif",beam_mom);
+  FigName = Form("../figures/HCAL_Simulation_2018c/c_G4Energy_%s_%dGeV.gif",pid.c_str(),beam_mom);
   c_G4Energy->SaveAs(FigName.c_str());
 }

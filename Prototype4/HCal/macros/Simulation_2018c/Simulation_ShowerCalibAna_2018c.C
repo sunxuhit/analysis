@@ -8,10 +8,14 @@ int Simulation_ShowerCalibAna_2018c(const int nEvents = 10000000, const int beam
 {
   gSystem->Load("/direct/phenix+u/xusun/WorkSpace/sPHENIX/install/lib/libProto4Simulation_2018c.so");
 
-  std::string outputfile = "/sphenix/user/xusun/Simulation/ShowerCalibAna/Proto4Simulation_2018c_pion_" + std::to_string(beam_mom) + "GeV.root";
+  // std::string beam_pid = "pion";
+  std::string beam_pid = "electron";
+
+  std::string outputfile = "/sphenix/user/xusun/Simulation/ShowerCalibAna/Proto4Simulation_2018c_" + beam_pid + "_" + std::to_string(beam_mom) + "GeV.root";
 
   Proto4Simulation * hcal_ana = new Proto4Simulation(outputfile.c_str());
   hcal_ana->set_momentum(beam_mom);
+  hcal_ana->set_pid(beam_pid);
   hcal_ana->set_numofevents(nEvents);
   hcal_ana->InitAna();
   hcal_ana->MakeAna();

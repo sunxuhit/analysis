@@ -55,6 +55,11 @@ class Proto4Simulation : public SubsysReco
     _mMom = momentum;
   }
 
+  void set_pid(std::string pid)
+  {
+    _mPID = pid;
+  }
+
   void set_numofevents(int numofenvets)
   {
     _mNumOfEvents = numofenvets;
@@ -169,6 +174,7 @@ class Proto4Simulation : public SubsysReco
   unsigned long _mStartEvent;
   unsigned long _mStopEvent;
   int _mMom;
+  std::string _mPID;
   int _mNumOfEvents;
 
   std::map<float,int> map_momIndex; // mom vs index

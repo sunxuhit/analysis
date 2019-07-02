@@ -72,6 +72,7 @@ Proto4Simulation::Proto4Simulation(const std::string &filename)
   _mStartEvent = -1;
   _mStopEvent = -1;
   _mMom = -1;
+  _mPID = "pion";
   _mNumOfEvents = -1;
 }
 
@@ -851,7 +852,7 @@ int Proto4Simulation::getChannelNumber(int row, int column)
 //---------------------Shower Calibration Analysis----------------------
 int Proto4Simulation::InitAna()
 {
-  string inputfile = Form("/sphenix/user/xusun/Simulation/ShowerCalib/Proto4Simulation_2018c_pion_%dGeV.root",_mMom);
+  string inputfile = Form("/sphenix/user/xusun/Simulation/ShowerCalib/Proto4Simulation_2018c_%s_%dGeV.root",_mPID.c_str(),_mMom);
   _mSimulation = new Proto4Simulation::HCAL_Sim();
 
   mFile_InPut = TFile::Open(inputfile.c_str());
