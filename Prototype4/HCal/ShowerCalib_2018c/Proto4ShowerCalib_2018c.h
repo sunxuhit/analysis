@@ -250,6 +250,7 @@ class Proto4ShowerCalib : public SubsysReco
   HCAL_Shower *_mShower;
 
   TH1F *h_mMomentum;
+
   TH2F *h_mAsymmEnergy; // MIP study
   TH2F *h_mAsymmEnergy_electron;
   TH2F *h_mAsymmEnergy_pion;
@@ -258,6 +259,16 @@ class Proto4ShowerCalib : public SubsysReco
   TH2F *h_mAsymmEnergy_balancing;
   TH2F *h_mAsymmEnergy_electron_balancing;
   TH2F *h_mAsymmEnergy_pion_balancing;
+
+  TH1F *h_mEMCalTower_e_high[64];
+  TH1F *h_mHCalTower_e_high[16];
+  TH1F *h_mEMCalTower_e_mid[64];
+  TH1F *h_mHCalTower_e_mid[16];
+
+  TH1F *h_mEMCalTower_pi_high[64];
+  TH1F *h_mHCalTower_pi_high[16];
+  TH1F *h_mEMCalTower_pi_mid[64];
+  TH1F *h_mHCalTower_pi_mid[16];
 
   // leveling correction
   TH2F *h_mAsymmEnergy_leveling;
@@ -270,21 +281,20 @@ class Proto4ShowerCalib : public SubsysReco
   TH2F *h_mAsymmEnergy_pion_showercalib;
 
   // Outer HCal only study
-  TH2F *h_mAsymmEnergy_MIP;
   TH1F *h_mEnergyOut_electron; // hadron MIP through EMCal
   TH1F *h_mEnergyOut_pion;
-  // TH1F *h_mEnergyOut_electron_ShowerCalib;
-  // TH1F *h_mEnergyOut_pion_ShowerCalib;
+  TH1F *h_mEnergyOut_electron_showercalib;
+  TH1F *h_mEnergyOut_pion_showercalib;
 
   // inner HCAL MIP energy extracted from muon
-  // const double MIP_mean  = 0.648114;
-  // const double MIP_width = 0.157061;
-  const double MIP_mean  = 0.65;
-  const double MIP_width = 0.16;
+  // const double MIP_mean  = 0.654677;
+  // const double MIP_width = 0.16485;
+  const double MIP_mean  = 0.655;
+  const double MIP_width = 0.165;
 
-  // const double showercalib = 2.53637; // extracted with 16 GeV Test Beam Data
-  // const double showercalib = 2.57864; // extracted with 16 GeV Test Beam Data
-  const double showercalib = 2.67; // extracted with 16 GeV Test Beam Data
+  // const double showercalib = 2.66831; // extracted with 16 GeV Test Beam Data
+  const double showercalib = 2.668; // extracted with 16 GeV Test Beam Data
+  const double showercalib_ohcal = 3.046; // extracted with 16 GeV Test Beam Data
 
   std::map<float,int> map_momIndex; // mom vs index
 

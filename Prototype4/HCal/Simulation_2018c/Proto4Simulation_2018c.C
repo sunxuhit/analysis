@@ -913,11 +913,12 @@ int Proto4Simulation::MakeAna()
 {
   cout << "Make()" << endl;
 
-  // const float c_in_leveling[12] = {0.814269, 0.87434, 0.930247, 0.870155, 0.841073, 0.812163, 0.805016, 0.804375, 0.796104, 0.785911, 0.792748, 0.793076};
-  // const float c_out_leveling[12] = {1.2955, 1.16784, 1.08106, 1.17539, 1.23298, 1.30086, 1.31963, 1.32136, 1.3443, 1.3744, 1.35398, 1.35302};
+  // const float c_in_leveling[12] = {1.29195, 1.22521, 1.24728, 1.19836, 1.17009, 1.08189, 0.99488, 0.945167, 0.937767, 0.932096, 0.92918, 0.936468};
+  // const float c_out_leveling[12] = {0.815677, 0.844729, 0.834548, 0.857982, 0.873081, 0.929633, 1.00517, 1.06159, 1.07108, 1.07858, 1.08251, 1.07278};
 
-  const float c_in_leveling[12] = {1.32772, 1.20668, 1.22724, 1.18479, 1.11161, 1.04602, 0.977995, 0.939564, 0.94241, 0.93623, 0.936535, 0.935812};
-  const float c_out_leveling[12] = {0.802034, 0.853766, 0.843767, 0.865074, 0.908759, 0.957861, 1.02302, 1.06875, 1.06509, 1.07309, 1.07269, 1.07364};
+  // artifical gain
+  const float c_in_leveling[12] = {0.947532, 0.913069, 0.910163, 0.900854, 0.887635, 0.846112, 0.79045, 0.758341, 0.727112, 0.714493, 0.692305, 0.679433};
+  const float c_out_leveling[12] = {1.05862, 1.10523, 1.10951, 1.12367, 1.14494, 1.22231, 1.36073, 1.46771, 1.60078, 1.66554, 1.80002, 1.89328};
 
   unsigned long start_event_use = _mStartEvent;
   unsigned long stop_event_use = _mStopEvent;
@@ -957,9 +958,10 @@ int Proto4Simulation::MakeAna()
     }
     const float c_in = c_in_leveling[momIndex];
     const float c_out = c_out_leveling[momIndex];
+    const float gain_OHCal = 0.4; // artifical gain factor to study gain effect
 
     const float energy_emcal_calib = _mSimulation->emcal_lg_e_calib;
-    const float energy_hcalout_calib = _mSimulation->hcalout_lg_e_calib;
+    const float energy_hcalout_calib = _mSimulation->hcalout_lg_e_calib*gain_OHCal;
 
     float energy_calib = energy_emcal_calib + energy_hcalout_calib;
     float asymm_calib = (energy_emcal_calib - energy_hcalout_calib)/(energy_emcal_calib + energy_hcalout_calib);
@@ -977,7 +979,7 @@ int Proto4Simulation::MakeAna()
       h_mAsymmEnergy_balancing->Fill(asymm_calib,energy_calib);
     }
 
-    if(energy_emcal_calib > 0.1 && energy_hcalout_calib > 0.1)
+    if(energy_emcal_calib > 0.1 && energy_hcalout_calib > 0.1 && energy_calib > MIP_energy_cut)
     {
       // apply leveling
       const float energy_leveling = c_in*energy_emcal_calib + c_out*energy_hcalout_calib;
@@ -985,7 +987,7 @@ int Proto4Simulation::MakeAna()
       h_mAsymmEnergy_leveling->Fill(asymm_leveling,energy_leveling);
     }
 
-    if(energy_emcal_calib > 0.1 && energy_hcalout_calib > 0.1)
+    if(energy_emcal_calib > 0.1 && energy_hcalout_calib > 0.1 && energy_calib > MIP_energy_cut)
     {
       // apply shower calibration
       const float energy_showercalib = showercalib*c_in*energy_emcal_calib + showercalib*c_out*energy_hcalout_calib;

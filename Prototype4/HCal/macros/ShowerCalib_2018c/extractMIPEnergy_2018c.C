@@ -95,5 +95,5 @@ void extractMIPEnergy_2018c()
   File_OutPut << "default MIP at " << mEnergy[i_MIP] << " GeV is: " << MIP_mean[i_MIP] << " +/- " << MIP_width[i_MIP] << endl;
   File_OutPut.close();
 
-  c_MIPEnergy->SaveAs("../figures/HCAL_ShowerCalib_2018c/c_MIPEnergy_2018c.eps");
+  c_MIPEnergy->SaveAs("./figures/c_MIPEnergy_2018c.eps");
 }

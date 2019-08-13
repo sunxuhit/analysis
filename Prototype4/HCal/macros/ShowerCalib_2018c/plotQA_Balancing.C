@@ -70,5 +70,5 @@ void plotQA_Balancing(int mEnergy = 12)
   h_mAsymmEnergy_electron_after->GetYaxis()->SetRangeUser(0.0,2.5*mEnergy);
   h_mAsymmEnergy_electron_after->Draw("colz");
 
-  c_AsymmEnergy->SaveAs("../figures/HCAL_ShowerCalib_2018c/c_EnergyBalancing_12GeV.eps");
+  c_AsymmEnergy->SaveAs("./figures/c_EnergyBalancing_12GeV.eps");
 }

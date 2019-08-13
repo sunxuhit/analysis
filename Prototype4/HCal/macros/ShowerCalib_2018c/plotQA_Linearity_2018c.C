@@ -30,10 +30,15 @@ void plotQA_Linearity_2018c()
   TFile *File_2018a_ohcal = TFile::Open(input_2018a_ohcal.c_str());
   TGraphAsymmErrors *g_linearity_2018a_pion_hcalout = (TGraphAsymmErrors*)File_2018a_ohcal->Get("g_linearity_2018_pion_hcalout");
 
-  // 2018 electron
+  // 2018a electron
   string input_2018a_electron = "/sphenix/user/xusun/TestBeam/ShowerCalibAna/T1044_2018_electron.root";
   TFile *File_2018a_electron = TFile::Open(input_2018a_electron.c_str());
   TGraphAsymmErrors *g_linearity_2018a_electron = (TGraphAsymmErrors*)File_2018a_electron->Get("g_linearity_2018_electron");
+
+  // 2018c electron
+  string input_2018c_electron = "/sphenix/user/xusun/TestBeam/ShowerCalibAna_2018c/T1044_2018c_electron.root";
+  TFile *File_2018c_electron = TFile::Open(input_2018c_electron.c_str());
+  TGraphAsymmErrors *g_linearity_2018c_electron = (TGraphAsymmErrors*)File_2018c_electron->Get("g_linearity_2018c_electron");
 
   TCanvas *c_Linearity = new TCanvas("c_Linearity","c_Linearity",10,10,800,800);
   c_Linearity->cd();
@@ -89,34 +94,43 @@ void plotQA_Linearity_2018c()
   g_linearity_2018a_pion->SetMarkerSize(2.0);
   g_linearity_2018a_pion->Draw("pE same");
 
-  g_linearity_2017_pion->SetMarkerStyle(25);
+  g_linearity_2017_pion->SetMarkerStyle(21);
   g_linearity_2017_pion->SetMarkerColor(2);
   g_linearity_2017_pion->SetMarkerSize(2.0);
   g_linearity_2017_pion->Draw("pE same");
 
-  /*
   g_linearity_2018a_pion_hcalout->SetMarkerStyle(34);
-  g_linearity_2018a_pion_hcalout->SetMarkerColor(6);
+  g_linearity_2018a_pion_hcalout->SetMarkerColor(kAzure+1);
   g_linearity_2018a_pion_hcalout->SetMarkerSize(2.0);
   g_linearity_2018a_pion_hcalout->Draw("pE same");
 
-  g_linearity_2018a_electron->SetMarkerStyle(20);
-  g_linearity_2018a_electron->SetMarkerColor(4);
+  /*
+  g_linearity_2018a_electron->SetMarkerStyle(34);
+  g_linearity_2018a_electron->SetMarkerColor(kAzure+1);
   g_linearity_2018a_electron->SetMarkerSize(2.0);
   g_linearity_2018a_electron->Draw("pE same");
+
+  g_linearity_2018c_electron->RemovePoint(11);
+  g_linearity_2018c_electron->RemovePoint(10);
+  g_linearity_2018c_electron->SetMarkerStyle(20);
+  g_linearity_2018c_electron->SetMarkerColor(6);
+  g_linearity_2018c_electron->SetMarkerSize(2.0);
+  g_linearity_2018c_electron->Draw("pE same");
   */
 
-  TLegend *leg_linear = new TLegend(0.2,0.6,0.5,0.8);
+  TLegend *leg_linear = new TLegend(0.5,0.2,0.8,0.4);
   leg_linear->SetBorderSize(0);
   leg_linear->SetFillColor(0);
   leg_linear->AddEntry(g_linearity_2018c_pion,"#pi- T1044-2018c EMCal+OHCal","p");
   leg_linear->AddEntry(g_linearity_2018a_pion,"#pi- T1044-2018a IHCal+OHCal","p");
+  leg_linear->AddEntry(g_linearity_2018a_pion_hcalout,"#pi- T1044-2018a & OHCal","p");
   leg_linear->AddEntry(g_linearity_2017_pion,"#pi- T1044-2017 IHCal+OHCal","p");
-  // leg_linear->AddEntry(g_linearity_2018a_pion_hcalout,"#pi- T1044-2018a & OHCal","p");
-  // leg_linear->AddEntry(g_linearity_2018a_electron,"e- T1044-2018a","p");
+  // leg_linear->AddEntry(g_linearity_2018c_electron,"e- T1044-2018c EMCal+OHCal","p");
+  // leg_linear->AddEntry(g_linearity_2018a_electron,"e- T1044-2018a IHCal+OHCal","p");
   leg_linear->AddEntry(l_unity,"unity","l");
   // leg_linear->AddEntry(f_pol,chi2_ndf.c_str(),"l");
   leg_linear->Draw("same");
 
-  c_Linearity->SaveAs("../figures/HCAL_ShowerCalib_2018c/c_Linearity_2018c.eps");
+  c_Linearity->SaveAs("./figures/c_Linearity_2018c.eps");
+  c_Linearity->SaveAs("./figures/c_Linearity_2018c.png");
 }

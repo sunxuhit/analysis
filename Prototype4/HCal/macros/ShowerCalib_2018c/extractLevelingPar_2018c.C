@@ -30,8 +30,8 @@ void extractLevelingPar_2018c()
     momentum[i_energy] = TMath::Abs(h_mMomentum[i_energy]->GetMean());
   }
 
-  float fit_start = -0.7;
-  float fit_stop  = 0.7;
+  float fit_start = -0.8;
+  float fit_stop  = 0.8;
   float c_in[12];
   float c_out[12];
   TF1 *f_pol[12];
@@ -79,7 +79,7 @@ void extractLevelingPar_2018c()
     leg->AddEntry(f_pol[i_pad],formula.c_str(),"l");
     leg->Draw("same");
   }
-  c_AsymmEnergy->SaveAs("../figures/HCAL_ShowerCalib_2018c/c_EnergyBalancing_2018c.eps");
+  c_AsymmEnergy->SaveAs("./figures/c_EnergyBalancing_2018c.eps");
 
   ofstream File_OutPut("leveling_corr.txt");
   for(int i_energy = 0; i_energy < 12; ++i_energy)

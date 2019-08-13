@@ -8,8 +8,8 @@ int Simulation_ShowerCalibAna_2018c(const int nEvents = 10000000, const int beam
 {
   gSystem->Load("/direct/phenix+u/xusun/WorkSpace/sPHENIX/install/lib/libProto4Simulation_2018c.so");
 
-  // std::string beam_pid = "pion";
-  std::string beam_pid = "electron";
+  std::string beam_pid = "pion";
+  // std::string beam_pid = "electron";
 
   std::string outputfile = "/sphenix/user/xusun/Simulation/ShowerCalibAna/Proto4Simulation_2018c_" + beam_pid + "_" + std::to_string(beam_mom) + "GeV.root";
 

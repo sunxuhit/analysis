@@ -104,7 +104,9 @@ void extractEnergyReco_Pion_2018c()
     f_gaus[i_pad]->SetParameter(0,norm);
     f_gaus[i_pad]->SetParameter(1,mean);
     f_gaus[i_pad]->SetParameter(2,sigma);
-    f_gaus[i_pad]->SetRange(mean-2.0*sigma,mean+2.0*sigma);
+    if(momentum[i_pad]< 10.0) f_gaus[i_pad]->SetRange(mean-1.0*sigma,mean+2.0*sigma);
+    else f_gaus[i_pad]->SetRange(mean-2.0*sigma,mean+2.0*sigma);
+    // f_gaus[i_pad]->SetRange(mean-2.0*sigma,mean+2.0*sigma);
     h_mEnergy_showercalib[i_pad]->Fit(f_gaus[i_pad],"NQR");
 
     f_gaus[i_pad]->SetLineColor(4);
@@ -132,7 +134,7 @@ void extractEnergyReco_Pion_2018c()
     val_resolution[i_pad] = val_sigma[i_pad]/val_mean[i_pad];
     err_resolution[i_pad] = ErrDiv(val_sigma[i_pad],val_mean[i_pad],err_sigma[i_pad],err_mean[i_pad]);
   }
-  c_Energy->SaveAs("../figures/HCAL_ShowerCalib_2018c/c_EnergyShowerCalib_pion_2018c.eps");
+  c_Energy->SaveAs("./figures/c_EnergyShowerCalib_pion_2018c.eps");
 
   TGraphAsymmErrors *g_linearity = new TGraphAsymmErrors();
   TGraphAsymmErrors *g_resolution = new TGraphAsymmErrors();

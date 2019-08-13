@@ -16,19 +16,17 @@ void plotQA_BalancedElectronEnergy()
 
   TH2F *h_mAsymmEnergy_electron[12];
   TH1F *h_mEnergy_electron[12];
-  TH1F *h_mMomentum[12];
   TFile *File_InPut[12];
 
   for(int i_energy = 0; i_energy < 12; ++i_energy)
   {
     
-    string inputfile = Form("/gpfs/mnt/gpfs02/sphenix/user/xusun/TestBeam/ShowerCalibAna_2018c/Proto4ShowerCalib_%dGeV_2018c.root",mEnergy[i_energy]);
+    string inputfile = Form("/gpfs/mnt/gpfs02/sphenix/user/xusun/Simulation/ShowerCalibAna/Proto4Simulation_2018c_electron_%dGeV.root",mEnergy[i_energy]);
     File_InPut[i_energy] = TFile::Open(inputfile.c_str());
-    h_mAsymmEnergy_electron[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_electron_leveling");
+    h_mAsymmEnergy_electron[i_energy] = (TH2F*)File_InPut[i_energy]->Get("h_mAsymmEnergy_leveling");
     h_mEnergy_electron[i_energy] = (TH1F*)h_mAsymmEnergy_electron[i_energy]->ProjectionY()->Clone("h_mEnergy_electron");
 
-    h_mMomentum[i_energy] = (TH1F*)File_InPut[i_energy]->Get("h_mMomentum");
-    momentum[i_energy] = TMath::Abs(h_mMomentum[i_energy]->GetMean());
+    momentum[i_energy] = (float)mEnergy[i_energy];
   }
 
   TCanvas *c_AsymmEnergy = new TCanvas("c_AsymmEnergy","c_AsymmEnergy",2000,1500);

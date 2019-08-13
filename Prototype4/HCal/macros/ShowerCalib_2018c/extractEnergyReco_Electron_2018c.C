@@ -60,6 +60,8 @@ void extractEnergyReco_Electron_2018c()
   float err_sigma[12];
   float val_resolution[12];
   float err_resolution[12];
+  float fit_start[12] = {6,8,10,12,16,24,32,38,46,52,30,40};
+  float fit_stop[12] = {9,12,14,18,23,32,40,50,60,70,60,80};
 
   TCanvas *c_Energy = new TCanvas("c_Energy","c_Energy",2000,1500);
   c_Energy->Divide(4,3);
@@ -76,7 +78,7 @@ void extractEnergyReco_Electron_2018c()
     h_mEnergy_leveling[i_pad]->SetStats(0);
     h_mEnergy_leveling[i_pad]->GetXaxis()->SetTitle("Total Energy (GeV)");
     h_mEnergy_leveling[i_pad]->GetXaxis()->CenterTitle();
-    h_mEnergy_leveling[i_pad]->GetXaxis()->SetRangeUser(0.0,2.5*momentum[i_pad]);
+    h_mEnergy_leveling[i_pad]->GetXaxis()->SetRangeUser(0.0,3.0*momentum[i_pad]);
     h_mEnergy_leveling[i_pad]->GetYaxis()->SetTitle();
     h_mEnergy_leveling[i_pad]->GetYaxis()->CenterTitle();
     h_mEnergy_leveling[i_pad]->GetYaxis()->SetRangeUser(0.0,1.4*h_mEnergy_leveling[i_pad]->GetMaximum());
@@ -104,7 +106,7 @@ void extractEnergyReco_Electron_2018c()
     f_gaus[i_pad]->SetParameter(0,norm);
     f_gaus[i_pad]->SetParameter(1,mean);
     f_gaus[i_pad]->SetParameter(2,sigma);
-    f_gaus[i_pad]->SetRange(mean-2.0*sigma,mean+2.0*sigma);
+    f_gaus[i_pad]->SetRange(fit_start[i_pad],fit_stop[i_pad]);
     h_mEnergy_showercalib[i_pad]->Fit(f_gaus[i_pad],"NQR");
 
     f_gaus[i_pad]->SetLineColor(4);
@@ -132,7 +134,7 @@ void extractEnergyReco_Electron_2018c()
     val_resolution[i_pad] = val_sigma[i_pad]/val_mean[i_pad];
     err_resolution[i_pad] = ErrDiv(val_sigma[i_pad],val_mean[i_pad],err_sigma[i_pad],err_mean[i_pad]);
   }
-  c_Energy->SaveAs("../figures/HCAL_ShowerCalib_2018c/c_EnergyShowerCalib_electron_2018c.eps");
+  c_Energy->SaveAs("./figures/c_EnergyShowerCalib_electron_2018c.eps");
 
   TGraphAsymmErrors *g_linearity = new TGraphAsymmErrors();
   TGraphAsymmErrors *g_resolution = new TGraphAsymmErrors();

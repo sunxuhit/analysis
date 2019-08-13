@@ -130,7 +130,7 @@ void extractEnergyReco_Electron_2018c()
     val_resolution[i_pad] = val_sigma[i_pad]/val_mean[i_pad];
     err_resolution[i_pad] = ErrDiv(val_sigma[i_pad],val_mean[i_pad],err_sigma[i_pad],err_mean[i_pad]);
   }
-  c_Energy->SaveAs("./figures/c_EnergyShowerCalib_2018c.eps");
+  c_Energy->SaveAs("./figures/c_EnergyShowerCalib_electron_2018c.eps");
 
   TGraphAsymmErrors *g_linearity = new TGraphAsymmErrors();
   TGraphAsymmErrors *g_resolution = new TGraphAsymmErrors();

@@ -24,10 +24,20 @@ void plotQA_Resolution_2018c()
   TFile *File_2018c_electron_simulation = TFile::Open(input_2018c_electron_simulation.c_str());
   TGraphAsymmErrors *g_resolution_2018c_electron_simulation = (TGraphAsymmErrors*)File_2018c_electron_simulation->Get("g_resolution_2018c_electron");
 
+  // 2018a pion
+  string input_2018a_pion = "/sphenix/user/xusun/TestBeam/ShowerCalibAna/T1044_2018_pion.root";
+  TFile *File_2018a_pion = TFile::Open(input_2018a_pion.c_str());
+  TGraphAsymmErrors *g_resolution_2018a_pion = (TGraphAsymmErrors*)File_2018a_pion->Get("g_resolution_2018_pion");
+
   // 2018a electron
   string input_2018a_electron = "/sphenix/user/xusun/TestBeam/ShowerCalibAna/T1044_2018_electron.root";
   TFile *File_2018a_electron = TFile::Open(input_2018a_electron.c_str());
   TGraphAsymmErrors *g_resolution_2018a_electron = (TGraphAsymmErrors*)File_2018a_electron->Get("g_resolution_2018_electron");
+
+  // 2018c electron
+  string input_2018c_electron = "/sphenix/user/xusun/TestBeam/ShowerCalibAna_2018c/T1044_2018c_electron.root";
+  TFile *File_2018c_electron = TFile::Open(input_2018c_electron.c_str());
+  TGraphAsymmErrors *g_resolution_2018c_electron = (TGraphAsymmErrors*)File_2018c_electron->Get("g_resolution_2018c_electron");
 
   // 2017 pion
   string input_2017_pion = "/sphenix/user/xusun/TestBeam/ShowerCalibAna/T1044_2017_pion.root";
@@ -59,6 +69,11 @@ void plotQA_Resolution_2018c()
   h_play->GetYaxis()->SetRangeUser(0.0,0.8);
   h_play->DrawCopy("pE");
 
+  g_resolution_2017_pion->SetMarkerStyle(21);
+  g_resolution_2017_pion->SetMarkerColor(2);
+  g_resolution_2017_pion->SetMarkerSize(1.4);
+  g_resolution_2017_pion->Draw("pE same");
+
   g_resolution_2018c_pion->SetMarkerStyle(20);
   g_resolution_2018c_pion->SetMarkerColor(kGray+2);
   g_resolution_2018c_pion->SetMarkerSize(2.0);
@@ -69,30 +84,42 @@ void plotQA_Resolution_2018c()
   g_resolution_2018c_pion_simulation->SetMarkerSize(2.0);
   g_resolution_2018c_pion_simulation->Draw("pE same");
 
+  g_resolution_2018a_pion->SetMarkerStyle(34);
+  g_resolution_2018a_pion->SetMarkerColor(kAzure+1);
+  g_resolution_2018a_pion->SetMarkerSize(1.4);
+  g_resolution_2018a_pion->Draw("pE same");
+
+  /*
   g_resolution_2018c_electron_simulation->SetMarkerStyle(28);
   g_resolution_2018c_electron_simulation->SetMarkerColor(4);
   g_resolution_2018c_electron_simulation->SetMarkerSize(2.0);
   g_resolution_2018c_electron_simulation->Draw("pE same");
 
   g_resolution_2018a_electron->SetMarkerStyle(34);
-  g_resolution_2018a_electron->SetMarkerColor(6);
+  g_resolution_2018a_electron->SetMarkerColor(kAzure+1);
   g_resolution_2018a_electron->SetMarkerSize(2.0);
   g_resolution_2018a_electron->Draw("pE same");
 
-  g_resolution_2017_pion->SetMarkerStyle(21);
-  g_resolution_2017_pion->SetMarkerColor(2);
-  g_resolution_2017_pion->SetMarkerSize(2.0);
-  g_resolution_2017_pion->Draw("pE same");
+  g_resolution_2018c_electron->RemovePoint(11);
+  g_resolution_2018c_electron->RemovePoint(10);
+  g_resolution_2018c_electron->SetMarkerStyle(20);
+  g_resolution_2018c_electron->SetMarkerColor(6);
+  g_resolution_2018c_electron->SetMarkerSize(2.0);
+  g_resolution_2018c_electron->Draw("pE same");
+  */
 
   TLegend *leg_linear = new TLegend(0.4,0.6,0.85,0.75);
   leg_linear->SetBorderSize(0);
   leg_linear->SetFillColor(0);
   leg_linear->AddEntry(g_resolution_2018c_pion,"#pi- T1044-2018c EMCal+OHCal","p");
+  leg_linear->AddEntry(g_resolution_2018c_pion_simulation,"#pi- Sim-2018c EMCal+OHCal","p");
+  leg_linear->AddEntry(g_resolution_2018a_pion,"#pi- T1044-2018a IHCal+OHCal","p");
   leg_linear->AddEntry(g_resolution_2017_pion,"#pi- T1044-2017 IHCal+OHCal","p");
-  leg_linear->AddEntry(g_resolution_2018c_pion_simulation,"#pi- Sim EMCal+OHCal","p");
-  leg_linear->AddEntry(g_resolution_2018a_electron,"e- T1044-2018a IHCal+OHCal","p");
-  leg_linear->AddEntry(g_resolution_2018c_electron_simulation,"e- Sim EMCal+OHCal","p");
+  // leg_linear->AddEntry(g_resolution_2018c_electron,"e- T1044-2018c EMCal+OHCal","p");
+  // leg_linear->AddEntry(g_resolution_2018a_electron,"e- T1044-2018a IHCal+OHCal","p");
+  // leg_linear->AddEntry(g_resolution_2018c_electron_simulation,"e- Sim EMCal+OHCal","p");
   leg_linear->Draw("same");
 
   c_Resolution->SaveAs("./figures/c_Resolution_2018c.eps");
+  c_Resolution->SaveAs("./figures/c_Resolution_2018c.png");
 }

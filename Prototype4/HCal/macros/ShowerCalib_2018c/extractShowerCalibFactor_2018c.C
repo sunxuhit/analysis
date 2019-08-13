@@ -84,7 +84,8 @@ void extractShowerCalibFactor_2018c()
     f_gaus[i_pad]->SetParameter(0,norm);
     f_gaus[i_pad]->SetParameter(1,mean);
     f_gaus[i_pad]->SetParameter(2,sigma);
-    f_gaus[i_pad]->SetRange(mean-2.0*sigma,mean+2.0*sigma);
+    if(momentum[i_pad]< 10.0) f_gaus[i_pad]->SetRange(mean-1.0*sigma,mean+2.0*sigma);
+    else f_gaus[i_pad]->SetRange(mean-2.0*sigma,mean+2.0*sigma);
     h_mEnergy_leveling[i_pad]->Fit(f_gaus[i_pad],"NQR");
 
     f_gaus[i_pad]->SetLineColor(4);
@@ -108,7 +109,7 @@ void extractShowerCalibFactor_2018c()
     leg[i_pad]->AddEntry((TObject*)0,leg_showercalib.c_str()," ");
     leg[i_pad]->Draw("same");
   }
-  c_Energy->SaveAs("../figures/HCAL_ShowerCalib_2018c/c_EnergyLeveling_2018c.eps");
+  c_Energy->SaveAs("./figures/c_EnergyLeveling_2018c.eps");
 
 
   ofstream File_OutPut("showercalib.txt");
